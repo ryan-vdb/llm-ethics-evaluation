@@ -1,6 +1,10 @@
+from pathlib import Path
 import duckdb
 
-con = duckdb.connect("llm_ethics_data.duckdb")
+DATA_DIR = Path(__file__).resolve().parent
+DB_PATH = DATA_DIR / "llm_ethics_data.duckdb"
+
+con = duckdb.connect(str(DB_PATH))
 
 con.execute("""
 
@@ -70,3 +74,7 @@ con.execute("""
     );
             
 """)
+
+con.close()
+
+print("Tables initialized successfully!")
