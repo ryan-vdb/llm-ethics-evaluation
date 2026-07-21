@@ -1,0 +1,10 @@
+duckdb
+pandas
+numpy
+scikit-learn
+sentence-transformers
+openai
+anthropic
+google-genai
+tqdm
+python-dotenv
