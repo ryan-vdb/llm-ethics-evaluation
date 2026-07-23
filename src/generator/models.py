@@ -4,9 +4,9 @@ MODELS = {
 
     "gemini_flash": "google/gemini-3.5-flash",
 
-    "gpt": "openai/gpt-5",
+    "gpt_55": "openai/gpt-5.5",
 
-    "deepseek": "deepseek/deepseek-chat-v3.1",
+    "grok": "x-ai/grok-4.3",
 
     "qwen": "qwen/qwen3-235b-a22b",
 
