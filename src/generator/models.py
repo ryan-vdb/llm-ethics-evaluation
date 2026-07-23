@@ -1,6 +1,6 @@
 MODELS = {
 
-    "claude": "anthropic/claude-sonnet-4.5",
+    "claude_sonnet": "anthropic/claude-sonnet-4.5",
 
     "gemini": "google/gemini-2.5-flash",
 
