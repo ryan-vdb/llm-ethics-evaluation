@@ -2,7 +2,7 @@ MODELS = {
 
     "claude_sonnet": "anthropic/claude-sonnet-4.5",
 
-    "gemini": "google/gemini-2.5-flash",
+    "gemini_flash": "google/gemini-3.5-flash",
 
     "gpt": "openai/gpt-5",
 

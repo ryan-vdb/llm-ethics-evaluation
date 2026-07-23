@@ -73,6 +73,24 @@ con.execute("""
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
             
+    CREATE TABLE IF NOT EXISTS consistency_embeddings (
+            
+        response_id INTEGER PRIMARY KEY,
+
+        embedding DOUBLE[] NOT NULL,
+            
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+            
+    CREATE TABLE IF NOT EXISTS integrity_embeddings (
+            
+        response_id INTEGER PRIMARY KEY,
+            
+        embedding DOUBLE[] NOT NULL,
+            
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+            
 """)
 
 con.close()

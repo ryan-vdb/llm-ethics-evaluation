@@ -251,7 +251,7 @@ def run_integrity(model_name: str, question_id: int,) -> dict:
 
 
 def main():
-    model_name = "claude_sonnet"
+    model_name = "gemini_flash"
 
     con = duckdb.connect(str(DB_PATH))
 
@@ -278,10 +278,9 @@ def main():
         )
 
         print(
-            f"[{index}/{total}] Completed integrity question "
-            f"{question_id} for {model_name}."
+            f"✓ Completed integrity question {question_id} "
+            f"({index}/{total})"
         )
-
 
 if __name__ == "__main__":
     main()
