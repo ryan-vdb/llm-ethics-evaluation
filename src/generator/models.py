@@ -8,6 +8,8 @@ MODELS = {
 
     "grok": "x-ai/grok-4.3",
 
-    "qwen": "qwen/qwen3-235b-a22b",
+    "claude_opus": "anthropic/claude-opus-4.7",
+
+    "deepseek": "deepseek/deepseek-v4-pro"
 
 }

@@ -251,7 +251,7 @@ def run_integrity(model_name: str, question_id: int,) -> dict:
 
 
 def main():
-    model_name = "grok"
+    model_name = "deepseek"
 
     for i in range(93):
 
