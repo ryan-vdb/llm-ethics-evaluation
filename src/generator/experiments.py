@@ -251,7 +251,19 @@ def run_integrity(model_name: str, question_id: int,) -> dict:
 
 
 def main():
-    model_name = "gemini_flash"
+    model_name = "deepseek"
+
+    for i in range(93):
+
+        run_consistency(
+
+            model_name=model_name,
+
+            question_id=i,
+
+        )
+
+        print(f"✓ Completed question {i} ({i + 1}/93)")
 
     con = duckdb.connect(str(DB_PATH))
 
