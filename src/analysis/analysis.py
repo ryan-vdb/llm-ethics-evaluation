@@ -2,8 +2,10 @@ from itertools import combinations
 from pathlib import Path
 
 import duckdb
+import pandas as pd
+import numpy as np
 
-from .api import cosine_similarity
+from .linalg import cosine_similarity
 
 DB_PATH = (
     Path(__file__).resolve().parent.parent
@@ -12,35 +14,91 @@ DB_PATH = (
 )
 
 
-def analyse_embeddings(
+def embeddings_table(
     response_table: str,
     embedding_table: str,
-):
+) -> pd.DataFrame:
 
     con = duckdb.connect(str(DB_PATH))
 
     try:
 
-        rows = con.execute(
-            f"""
-            SELECT
-                r.response_id,
-                r.model,
-                r.question_id,
-                e.embedding
-            FROM {response_table} r
-            JOIN {embedding_table} e
-                ON r.response_id = e.response_id
-            ORDER BY r.question_id, r.model
-            """
-        ).fetchall()
+        df = con.execute(
+                f"""
+                SELECT
+                    r.response_id,
+                    r.model,
+                    r.question_id,
+                    e.embedding
+                FROM {response_table} r
+                JOIN {embedding_table} e
+                    ON r.response_id = e.response_id
+                ORDER BY r.question_id, r.model
+                """
+            ).df()
 
-        print(f"\nLoaded {len(rows)} embeddings.")
+        print(f"\nLoaded {len(df)} embeddings.")
+
+        return df
+    
+    finally:
+        con.close()
+
+def similarity_matrices(embeddings_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
+
+    required_columns = {
+        "response_id",
+        "model",
+        "question_id",
+        "embedding",
+    }
+
+    missing_columns = required_columns - set(embeddings_df.columns)
+
+    if missing_columns:
+        raise ValueError(
+            f"Missing required columns: {sorted(missing_columns)}"
+        )
+    
+    matrices = {}
+
+    sorted_df = embeddings_df.sort_values(
+        by=["model", "question_id"]
+    ).reset_index(drop=True)
+
+    for model, model_df in sorted_df.groupby("model", sort=True):
+        model_df = model_df.sort_values("question_id").reset_index(drop=True)
+        
+        question_ids = model_df["question_id"].tolist()
+
+        embedding_matrix = np.vstack(
+            model_df["embedding"].apply(
+                lambda embedding: np.asarray(embedding, dtype=float)
+            )
+        )
+
+        similarity_matrix = np.array([
+            [
+                cosine_similarity(embedding1, embedding2)
+                for embedding2 in embedding_matrix
+            ]
+            for embedding1 in embedding_matrix
+        ])
+
+        matrices[model] = pd.DataFrame(
+            similarity_matrix,
+            index=question_ids,
+            columns=question_ids,
+        )
+    
+    return matrices
+
+        
 
         ####################################################
         # ACROSS MODELS
         ####################################################
-
+'''
         print("\n========== ACROSS MODELS ==========\n")
 
         pair_scores = {}
@@ -124,26 +182,28 @@ def analyse_embeddings(
     finally:
         con.close()
 
+        '''
 
 def main():
 
-    print("\n==============================")
-    print("CONSISTENCY")
-    print("==============================")
-
-    analyse_embeddings(
-        "consistency_responses",
-        "consistency_embeddings",
+    embeddings_df = embeddings_table(
+        response_table="consistency_responses",
+        embedding_table="consistency_embeddings",
     )
 
-    print("\n==============================")
-    print("INTEGRITY")
-    print("==============================")
+    matrices = similarity_matrices(embeddings_df)
 
-    analyse_embeddings(
-        "integrity_responses",
-        "integrity_embeddings",
-    )
+    print("\n" + "=" * 60)
+    print("Similarity Matrices")
+    print("=" * 60)
+
+    for model, matrix in matrices.items():
+
+        print(f"\nModel: {model}")
+        print(f"Shape: {matrix.shape}")
+
+        print("\nTop-left 5×5:")
+        print(matrix.iloc[:5, :5].round(3))
 
 
 if __name__ == "__main__":
