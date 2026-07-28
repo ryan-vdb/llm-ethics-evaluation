@@ -93,12 +93,37 @@ def similarity_matrices(embeddings_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     
     return matrices
 
+def aggregate_matrix(matrices: dict[str, pd.DataFrame]) -> pd.DataFrame:
+
+    matrix_array = np.stack([
+        matrix.to_numpy()
+        for matrix in matrices.values()
+    ])
+
+    aggregate_values = matrix_array.mean(axis=0)
+
+    first_matrix = next(iter(matrices.values()))
+
+    return pd.DataFrame(
+        aggregate_values,
+        index=first_matrix.index,
+        columns=first_matrix.columns
+    )
+
+def residual_matrices(matrices: dict[str, pd.DataFrame], aggregate: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    
+    return{
+        model : matrix - aggregate
+        for model, matrix in matrices.items()
+    }
+   
+
         
 
         ####################################################
         # ACROSS MODELS
         ####################################################
-'''
+    '''
         print("\n========== ACROSS MODELS ==========\n")
 
         pair_scores = {}
@@ -193,17 +218,39 @@ def main():
 
     matrices = similarity_matrices(embeddings_df)
 
+    aggregate = aggregate_matrix(matrices)
+
+    residuals = residual_matrices(
+        matrices,
+        aggregate,
+    )
+
     print("\n" + "=" * 60)
-    print("Similarity Matrices")
+    print("Similarity Analysis")
     print("=" * 60)
 
-    for model, matrix in matrices.items():
+    print(f"\nModels: {len(matrices)}")
+    print(f"Matrix shape: {aggregate.shape}")
+
+    print("\nAggregate matrix — top-left 5×5:")
+    print(aggregate.iloc[:5, :5].round(3))
+
+    print("\n" + "=" * 60)
+    print("Residual Matrices")
+    print("=" * 60)
+
+    for model, residual in residuals.items():
 
         print(f"\nModel: {model}")
-        print(f"Shape: {matrix.shape}")
+
+        print(
+            f"Residual range: "
+            f"{residual.to_numpy().min():.3f} to "
+            f"{residual.to_numpy().max():.3f}"
+        )
 
         print("\nTop-left 5×5:")
-        print(matrix.iloc[:5, :5].round(3))
+        print(residual.iloc[:5, :5].round(3))
 
 
 if __name__ == "__main__":
