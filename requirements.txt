@@ -2,6 +2,7 @@ duckdb
 pandas
 numpy
 scikit-learn
+scipy
 sentence-transformers
 openai
 anthropic

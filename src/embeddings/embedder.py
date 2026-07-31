@@ -58,9 +58,56 @@ def run_embeddings(response_table: str, embedding_table: str):
     finally:
         con.close()
 
+
+def embed_questions() -> None:
+
+    con = duckdb.connect(str(DB_PATH))
+
+    questions = con.execute("""
+        SELECT q.question_id, q.question_text
+        FROM (
+            SELECT question_id, question_text
+            FROM consistency_questions
+
+            UNION ALL
+
+            SELECT question_id, question_text
+            FROM integrity_questions
+        ) AS q
+        LEFT JOIN question_embeddings AS e
+            ON q.question_id = e.question_id
+        WHERE e.question_id IS NULL
+        ORDER BY q.question_id
+    """).fetchall()
+
+    total = len(questions)
+
+    if total == 0:
+        print("All questions are already embedded.")
+        return
+
+    for index, (question_id, question_text) in enumerate(questions, start=1):
+        embedding = get_embedding(question_text)
+
+        con.execute(
+            """
+            INSERT INTO question_embeddings (
+                question_id,
+                embedding
+            )
+            VALUES (?, ?)
+            """,
+            [question_id, embedding],
+        )
+
+        print(f"Embedded question {index}/{total} (question_id={question_id})")
+
+    print(f"Finished embedding {total} questions.")
+
 def main():
     run_embeddings("consistency_responses", "consistency_embeddings")
     run_embeddings("integrity_responses", "integrity_embeddings")
+    embed_questions()
 
 if __name__ == "__main__":
     main()

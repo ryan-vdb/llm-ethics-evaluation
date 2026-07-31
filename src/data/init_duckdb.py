@@ -91,11 +91,20 @@ con.execute("""
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
             
+    CREATE TABLE IF NOT EXISTS question_embeddings (
+
+    question_id INTEGER PRIMARY KEY,
+
+    embedding FLOAT[] NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    );
+
 """)
 
 con.close()
 
 print("Tables initialized successfully!")
-
 
 

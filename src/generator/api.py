@@ -1,10 +1,21 @@
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
-api_key = os.getenv("OPENROUTER_API_KEY")
+
+ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
+API_KEY_VARIABLE = "OPENROUTER_GENERATION_API_KEY"
+
+load_dotenv(ENV_PATH, override=False)
+api_key = os.getenv(API_KEY_VARIABLE)
 
 if not api_key:
-    raise RuntimeError("OPENROUTER_API_KEY is not set.")
+    raise RuntimeError(
+        f"{API_KEY_VARIABLE} is not set. Add it to {ENV_PATH} or export it "
+        "in your shell."
+    )
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",

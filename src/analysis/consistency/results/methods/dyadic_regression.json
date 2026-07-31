@@ -1,0 +1,213 @@
+{
+  "method": "leave-one-model-out topic-controlled nuisance-residual MRQAP sensitivity",
+  "primary_definition": {
+    "different_exact_domain": true,
+    "different_source": false,
+    "question_similarity_quantile": 0.25,
+    "question_similarity_cutoff": 0.24955412720042297,
+    "pair_count": 1070,
+    "topic_covariates": [
+      "question cosine",
+      "question cosine squared",
+      "same source"
+    ],
+    "permutation_note": "Nuisance residuals are estimated on the complete dyadic network so node permutations remain defined, then the coefficient is refit on the masked estimand. Treat p-values as exploratory sensitivity evidence."
+  },
+  "held_out_models": [
+    {
+      "model": "claude_sonnet",
+      "standardized_consensus_beta": 0.8244699257701612,
+      "topic_only_r_squared": 0.012837571768335998,
+      "full_r_squared": 0.6778044498107235,
+      "incremental_r_squared": 0.6649668780423875,
+      "p_value": 0.0001,
+      "null_beta_mean": -0.00010262871767668598,
+      "null_beta_std": 0.08190727917821905,
+      "z_score": 10.067146201910585,
+      "beta_ci_95_low": 0.7561475683382113,
+      "beta_ci_95_high": 0.8752115901915615,
+      "incremental_r2_ci_95_low": 0.5577479657709268,
+      "incremental_r2_ci_95_high": 0.7455232914990524,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "claude_opus",
+      "standardized_consensus_beta": 0.768043799032855,
+      "topic_only_r_squared": 0.008545467330577594,
+      "full_r_squared": 0.5848686117664972,
+      "incremental_r_squared": 0.5763231444359196,
+      "p_value": 0.0001,
+      "null_beta_mean": 0.0009286631542502593,
+      "null_beta_std": 0.08182405324801614,
+      "z_score": 9.375178879899888,
+      "beta_ci_95_low": 0.6973139298358175,
+      "beta_ci_95_high": 0.8216507486174749,
+      "incremental_r2_ci_95_low": 0.4708746460159489,
+      "incremental_r2_ci_95_high": 0.6535690801829295,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "gemini_flash",
+      "standardized_consensus_beta": 0.7877118144836097,
+      "topic_only_r_squared": 0.01693793380595554,
+      "full_r_squared": 0.6247878280432619,
+      "incremental_r_squared": 0.6078498942373064,
+      "p_value": 0.0001,
+      "null_beta_mean": 0.0009679774218516882,
+      "null_beta_std": 0.08550416068067924,
+      "z_score": 9.201234545765594,
+      "beta_ci_95_low": 0.7030720308986926,
+      "beta_ci_95_high": 0.8604481388088511,
+      "incremental_r2_ci_95_low": 0.4781070385285319,
+      "incremental_r2_ci_95_high": 0.7184338882669974,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "gpt_55",
+      "standardized_consensus_beta": 0.8437521915177101,
+      "topic_only_r_squared": 0.02995208246159453,
+      "full_r_squared": 0.7288717649411243,
+      "incremental_r_squared": 0.6989196824795297,
+      "p_value": 0.0001,
+      "null_beta_mean": -0.0003227630052040079,
+      "null_beta_std": 0.08352373273843748,
+      "z_score": 10.105809772250185,
+      "beta_ci_95_low": 0.787221098658479,
+      "beta_ci_95_high": 0.8906811828950829,
+      "incremental_r2_ci_95_low": 0.6010182262854409,
+      "incremental_r2_ci_95_high": 0.7708501132716399,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "grok",
+      "standardized_consensus_beta": 0.7951002145230343,
+      "topic_only_r_squared": 0.012194173821700627,
+      "full_r_squared": 0.630587311785398,
+      "incremental_r_squared": 0.6183931379636973,
+      "p_value": 0.0001,
+      "null_beta_mean": -8.836767531333275e-05,
+      "null_beta_std": 0.0849599572640617,
+      "z_score": 9.359568999391605,
+      "beta_ci_95_low": 0.7124621548915513,
+      "beta_ci_95_high": 0.8574669329610036,
+      "incremental_r2_ci_95_low": 0.49279034877341715,
+      "incremental_r2_ci_95_high": 0.7150944831119025,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "deepseek",
+      "standardized_consensus_beta": 0.8321006708979367,
+      "topic_only_r_squared": 0.0223892275685863,
+      "full_r_squared": 0.7012860603976777,
+      "incremental_r_squared": 0.6788968328290914,
+      "p_value": 0.0001,
+      "null_beta_mean": 0.0006519845052139334,
+      "null_beta_std": 0.08199398076726956,
+      "z_score": 10.140362482859489,
+      "beta_ci_95_low": 0.7649598141773559,
+      "beta_ci_95_high": 0.8782436649722821,
+      "incremental_r2_ci_95_low": 0.5642648879431044,
+      "incremental_r2_ci_95_high": 0.7532045569268582,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    }
+  ],
+  "mean_standardized_beta": 0.8085297693708845,
+  "min_standardized_beta": 0.768043799032855,
+  "mean_incremental_r_squared": 0.6408915949979886,
+  "mean_raw_standardized_beta": 0.7156303898613009,
+  "raw_held_out_models": [
+    {
+      "model": "claude_sonnet",
+      "standardized_consensus_beta": 0.7000900420634937,
+      "topic_only_r_squared": 0.17672738231238883,
+      "full_r_squared": 0.5440489498314247,
+      "incremental_r_squared": 0.3673215675190359
+    },
+    {
+      "model": "claude_opus",
+      "standardized_consensus_beta": 0.6936506164297306,
+      "topic_only_r_squared": 0.14534849310468168,
+      "full_r_squared": 0.5027203529894055,
+      "incremental_r_squared": 0.35737185988472386
+    },
+    {
+      "model": "gemini_flash",
+      "standardized_consensus_beta": 0.6840410571625791,
+      "topic_only_r_squared": 0.14971404466611882,
+      "full_r_squared": 0.4977657664203913,
+      "incremental_r_squared": 0.34805172175427246
+    },
+    {
+      "model": "gpt_55",
+      "standardized_consensus_beta": 0.7291208835892277,
+      "topic_only_r_squared": 0.27275536045046245,
+      "full_r_squared": 0.679407708420923,
+      "incremental_r_squared": 0.40665234797046057
+    },
+    {
+      "model": "grok",
+      "standardized_consensus_beta": 0.7507050257216056,
+      "topic_only_r_squared": 0.1381512077232454,
+      "full_r_squared": 0.5529778154914265,
+      "incremental_r_squared": 0.41482660776818114
+    },
+    {
+      "model": "deepseek",
+      "standardized_consensus_beta": 0.7361747142011682,
+      "topic_only_r_squared": 0.20062562982018395,
+      "full_r_squared": 0.6079873610938797,
+      "incremental_r_squared": 0.4073617312736958
+    }
+  ],
+  "leave_one_source_out": [
+    {
+      "omitted_source": "Ask a Manager",
+      "remaining_pair_count": 846,
+      "mean_beta": 0.8042072007235493,
+      "mean_incremental_r_squared": 0.6358713701608022
+    },
+    {
+      "omitted_source": "Case Studies - Ethics Unwrapped",
+      "remaining_pair_count": 822,
+      "mean_beta": 0.80248910251927,
+      "mean_incremental_r_squared": 0.6314966592549895
+    },
+    {
+      "omitted_source": "Cases, Rules, & Guidelines - Association for Practical and Professional Ethics",
+      "remaining_pair_count": 600,
+      "mean_beta": 0.8222794907474866,
+      "mean_incremental_r_squared": 0.6616232606774785
+    },
+    {
+      "omitted_source": "Classroom Resources | Carnegie Council on Ethics in International Affairs",
+      "remaining_pair_count": 866,
+      "mean_beta": 0.8026322712304005,
+      "mean_incremental_r_squared": 0.6303350873309995
+    },
+    {
+      "omitted_source": "Original",
+      "remaining_pair_count": 693,
+      "mean_beta": 0.7983722493127452,
+      "mean_incremental_r_squared": 0.61956693358704
+    },
+    {
+      "omitted_source": "The BMJ: Head to head",
+      "remaining_pair_count": 950,
+      "mean_beta": 0.8060358093070167,
+      "mean_incremental_r_squared": 0.6396676816903927
+    },
+    {
+      "omitted_source": "The Ethicist - The New York Times",
+      "remaining_pair_count": 651,
+      "mean_beta": 0.8273333586188936,
+      "mean_incremental_r_squared": 0.656722492031867
+    }
+  ],
+  "runtime_seconds": 19.127150874817744
+}

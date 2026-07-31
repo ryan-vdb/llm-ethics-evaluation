@@ -1,0 +1,100 @@
+{
+  "method": "independent within-topic re-pairing followed by re-projection",
+  "observed_mean_held_out_rho": 0.8010450979992823,
+  "permutations": 999,
+  "topic_blocks": 6,
+  "topic_block_sizes": {
+    "0": 7,
+    "1": 33,
+    "2": 11,
+    "3": 9,
+    "4": 14,
+    "5": 19
+  },
+  "p_value": 0.001,
+  "null_mean": 0.2916897363860711,
+  "null_std": 0.023414160124676568,
+  "null_95_percentile": 0.3295678879473815,
+  "null_99_percentile": 0.34206163902032016,
+  "z_score": 21.75415897478181,
+  "block_count_sensitivity": [
+    {
+      "topic_blocks": 4,
+      "topic_block_sizes": {
+        "0": 27,
+        "1": 16,
+        "2": 20,
+        "3": 30
+      },
+      "p_value": 0.001,
+      "null_mean": 0.2694526796892038,
+      "null_std": 0.024708108863365153,
+      "null_95_percentile": 0.3117586010581842,
+      "null_99_percentile": 0.32490547537742703,
+      "z_score": 21.514897042495768
+    },
+    {
+      "topic_blocks": 6,
+      "topic_block_sizes": {
+        "0": 7,
+        "1": 33,
+        "2": 11,
+        "3": 9,
+        "4": 14,
+        "5": 19
+      },
+      "p_value": 0.001,
+      "null_mean": 0.2916897363860711,
+      "null_std": 0.023414160124676568,
+      "null_95_percentile": 0.3295678879473815,
+      "null_99_percentile": 0.34206163902032016,
+      "z_score": 21.75415897478181
+    },
+    {
+      "topic_blocks": 8,
+      "topic_block_sizes": {
+        "0": 17,
+        "1": 16,
+        "2": 12,
+        "3": 3,
+        "4": 12,
+        "5": 9,
+        "6": 10,
+        "7": 14
+      },
+      "p_value": 0.001,
+      "null_mean": 0.35472011995688096,
+      "null_std": 0.02112680404133428,
+      "null_95_percentile": 0.38837909330216663,
+      "null_99_percentile": 0.40430526665481453,
+      "z_score": 21.126005484273584
+    },
+    {
+      "topic_blocks": 12,
+      "topic_block_sizes": {
+        "0": 8,
+        "1": 13,
+        "2": 5,
+        "3": 7,
+        "4": 8,
+        "5": 14,
+        "6": 8,
+        "7": 10,
+        "8": 2,
+        "9": 7,
+        "10": 5,
+        "11": 6
+      },
+      "p_value": 0.001,
+      "null_mean": 0.3922480988411322,
+      "null_std": 0.021436751153698787,
+      "null_95_percentile": 0.4279427464355023,
+      "null_99_percentile": 0.438874811913693,
+      "z_score": 19.06991391685836
+    }
+  ],
+  "question_similarity_cutoff": 0.24955412720042297,
+  "pair_count": 992,
+  "interpretation": "The null approximately preserves coarse question-topic block assignment and raw-answer marginals, and retains the shared projection operation, while destroying scenario-level alignment.",
+  "runtime_seconds": 24.66514683305286
+}

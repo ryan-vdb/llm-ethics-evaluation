@@ -1,0 +1,173 @@
+{
+  "method": "leave-one-model-out linear CKA using unbiased HSIC estimators",
+  "held_out_models": [
+    {
+      "model": "claude_sonnet",
+      "cka": 0.7503968488323401,
+      "p_value": 0.0001,
+      "null_mean": 9.702218551433586e-06,
+      "null_std": 0.015400908852660166,
+      "z_score": 48.72356260222759,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "claude_opus",
+      "cka": 0.7399889964172074,
+      "p_value": 0.0001,
+      "null_mean": -5.960631565464196e-05,
+      "null_std": 0.015588089438949921,
+      "z_score": 47.47526023835252,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "gemini_flash",
+      "cka": 0.6530529518353883,
+      "p_value": 0.0001,
+      "null_mean": 0.0003428431150962179,
+      "null_std": 0.015413879840773028,
+      "z_score": 42.34560769013739,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "gpt_55",
+      "cka": 0.7794584134603382,
+      "p_value": 0.0001,
+      "null_mean": -0.00018982693942681207,
+      "null_std": 0.015285635753351028,
+      "z_score": 51.00528711923839,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "grok",
+      "cka": 0.73291072061308,
+      "p_value": 0.0001,
+      "null_mean": 3.969679584538761e-05,
+      "null_std": 0.015499214374807564,
+      "z_score": 47.284398169783614,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    },
+    {
+      "model": "deepseek",
+      "cka": 0.7236938184077613,
+      "p_value": 0.0001,
+      "null_mean": 0.00011601989415307695,
+      "null_std": 0.015589375296065109,
+      "z_score": 46.41480397846637,
+      "q_value_bh": 0.0001,
+      "p_value_holm": 0.0006000000000000001
+    }
+  ],
+  "mean_held_out_cka": 0.7299169582610191,
+  "min_held_out_cka": 0.6530529518353883,
+  "mean_raw_held_out_cka": 0.9412167384493862,
+  "raw_held_out_models": [
+    {
+      "model": "claude_sonnet",
+      "cka": 0.9461069245813272
+    },
+    {
+      "model": "claude_opus",
+      "cka": 0.9432356283517976
+    },
+    {
+      "model": "gemini_flash",
+      "cka": 0.9212006121111181
+    },
+    {
+      "model": "gpt_55",
+      "cka": 0.9524686594142717
+    },
+    {
+      "model": "grok",
+      "cka": 0.9365753637907616
+    },
+    {
+      "model": "deepseek",
+      "cka": 0.9477132424470412
+    }
+  ],
+  "pairwise_models": [
+    {
+      "model_1": "claude_sonnet",
+      "model_2": "claude_opus",
+      "unbiased_cka": 0.645386241264653
+    },
+    {
+      "model_1": "claude_sonnet",
+      "model_2": "gemini_flash",
+      "unbiased_cka": 0.558978128297209
+    },
+    {
+      "model_1": "claude_sonnet",
+      "model_2": "gpt_55",
+      "unbiased_cka": 0.6485465492227855
+    },
+    {
+      "model_1": "claude_sonnet",
+      "model_2": "grok",
+      "unbiased_cka": 0.6158055869988583
+    },
+    {
+      "model_1": "claude_sonnet",
+      "model_2": "deepseek",
+      "unbiased_cka": 0.6180092512460688
+    },
+    {
+      "model_1": "claude_opus",
+      "model_2": "gemini_flash",
+      "unbiased_cka": 0.5299010513527307
+    },
+    {
+      "model_1": "claude_opus",
+      "model_2": "gpt_55",
+      "unbiased_cka": 0.6872762707997867
+    },
+    {
+      "model_1": "claude_opus",
+      "model_2": "grok",
+      "unbiased_cka": 0.5970624889405372
+    },
+    {
+      "model_1": "claude_opus",
+      "model_2": "deepseek",
+      "unbiased_cka": 0.5932926832029247
+    },
+    {
+      "model_1": "gemini_flash",
+      "model_2": "gpt_55",
+      "unbiased_cka": 0.5695266083352202
+    },
+    {
+      "model_1": "gemini_flash",
+      "model_2": "grok",
+      "unbiased_cka": 0.5626959077254705
+    },
+    {
+      "model_1": "gemini_flash",
+      "model_2": "deepseek",
+      "unbiased_cka": 0.5185355175053249
+    },
+    {
+      "model_1": "gpt_55",
+      "model_2": "grok",
+      "unbiased_cka": 0.6339541623879128
+    },
+    {
+      "model_1": "gpt_55",
+      "model_2": "deepseek",
+      "unbiased_cka": 0.6480136060210161
+    },
+    {
+      "model_1": "grok",
+      "model_2": "deepseek",
+      "unbiased_cka": 0.6167306896696594
+    }
+  ],
+  "interpretation": "CKA measures agreement between whole geometries and is invariant to isotropic scaling and orthogonal rotations. This ratio uses unbiased HSIC terms, but the ratio itself is not unbiased and can be negative under the null.",
+  "runtime_seconds": 5.477300665806979
+}

@@ -1,0 +1,140 @@
+{
+  "method": "geometric sensitivity checks specified for this analysis",
+  "primary_question_similarity_cutoff": 0.24955412720042297,
+  "primary_pair_count": 992,
+  "checks": [
+    {
+      "check": "exact paired-question projection",
+      "mean_held_out_rho": 0.8010450979992823,
+      "min_held_out_rho": 0.7618091496523016,
+      "max_held_out_rho": 0.843204199063704,
+      "rho_relative_to_primary": 1.0,
+      "held_out_rhos": {
+        "claude_sonnet": 0.8192477940567354,
+        "claude_opus": 0.7618091496523016,
+        "gemini_flash": 0.7868778305940101,
+        "gpt_55": 0.843204199063704,
+        "grok": 0.7725134050313485,
+        "deepseek": 0.8226182095975942
+      },
+      "description": "Primary transformation, strength=1.0."
+    },
+    {
+      "check": "remove full question row-span",
+      "mean_held_out_rho": 0.6065924693944551,
+      "min_held_out_rho": 0.5698840342992169,
+      "max_held_out_rho": 0.647363446210287,
+      "rho_relative_to_primary": 0.7572513344248674,
+      "held_out_rhos": {
+        "claude_sonnet": 0.647363446210287,
+        "claude_opus": 0.5698840342992169,
+        "gemini_flash": 0.5744495121332299,
+        "gpt_55": 0.6340838549989111,
+        "grok": 0.5898129176443703,
+        "deepseek": 0.6239610510807158
+      },
+      "question_subspace_rank": 93,
+      "description": "Projects every answer away from the complete 93-question linear span before normalization."
+    },
+    {
+      "check": "remove model answer centroid then paired projection",
+      "mean_held_out_rho": 0.7181529303792832,
+      "min_held_out_rho": 0.6242840318203903,
+      "max_held_out_rho": 0.7682220901509033,
+      "rho_relative_to_primary": 0.8965199739352586,
+      "held_out_rhos": {
+        "claude_sonnet": 0.704868502386576,
+        "claude_opus": 0.7682220901509033,
+        "gemini_flash": 0.6242840318203903,
+        "gpt_55": 0.7622602565716128,
+        "grok": 0.7094395717726762,
+        "deepseek": 0.7398431295735407
+      },
+      "description": "Removes each model's common answer-centroid direction before exact paired-question projection."
+    },
+    {
+      "check": "omit question 37 generation outlier",
+      "mean_held_out_rho": 0.8019361779445963,
+      "min_held_out_rho": 0.7606424790834926,
+      "max_held_out_rho": 0.846391534088124,
+      "rho_relative_to_primary": 1.00111239672715,
+      "held_out_rhos": {
+        "claude_sonnet": 0.8188800722686406,
+        "claude_opus": 0.7606424790834926,
+        "gemini_flash": 0.7875141021219548,
+        "gpt_55": 0.846391534088124,
+        "grok": 0.7736146764158526,
+        "deepseek": 0.8245742036895126
+      },
+      "omitted_question_id": 37,
+      "description": "Drops the 21,106-character Gemini generation and the matching question from all model views."
+    }
+  ],
+  "projection_strength_sensitivity": [
+    {
+      "strength": 0.75,
+      "mean_held_out_rho": 0.7337602767639781,
+      "min_held_out_rho": 0.6970903492306364,
+      "max_abs_paired_question_cosine": 0.3936053272689344
+    },
+    {
+      "strength": 0.85,
+      "mean_held_out_rho": 0.760172671410376,
+      "min_held_out_rho": 0.7222099675486878,
+      "max_abs_paired_question_cosine": 0.24882068566615653
+    },
+    {
+      "strength": 1.0,
+      "mean_held_out_rho": 0.8010450979992823,
+      "min_held_out_rho": 0.7618091496523016,
+      "max_abs_paired_question_cosine": 4.996003610813204e-16
+    }
+  ],
+  "leave_one_source_out": [
+    {
+      "omitted_source": "Ask a Manager",
+      "remaining_pair_count": 768,
+      "mean_held_out_rho": 0.793998463623412,
+      "min_held_out_rho": 0.7612502451533169
+    },
+    {
+      "omitted_source": "Case Studies - Ethics Unwrapped",
+      "remaining_pair_count": 748,
+      "mean_held_out_rho": 0.7955789668275323,
+      "min_held_out_rho": 0.7522793940803183
+    },
+    {
+      "omitted_source": "Cases, Rules, & Guidelines - Association for Practical and Professional Ethics",
+      "remaining_pair_count": 552,
+      "mean_held_out_rho": 0.8167885920653489,
+      "min_held_out_rho": 0.7439566127088336
+    },
+    {
+      "omitted_source": "Classroom Resources | Carnegie Council on Ethics in International Affairs",
+      "remaining_pair_count": 790,
+      "mean_held_out_rho": 0.7934653310378348,
+      "min_held_out_rho": 0.7468900995555114
+    },
+    {
+      "omitted_source": "Original",
+      "remaining_pair_count": 640,
+      "mean_held_out_rho": 0.7921708098667336,
+      "min_held_out_rho": 0.7404527508449755
+    },
+    {
+      "omitted_source": "The BMJ: Head to head",
+      "remaining_pair_count": 872,
+      "mean_held_out_rho": 0.7959348892105015,
+      "min_held_out_rho": 0.7690960577174968
+    },
+    {
+      "omitted_source": "The Ethicist - The New York Times",
+      "remaining_pair_count": 590,
+      "mean_held_out_rho": 0.8238107312631682,
+      "min_held_out_rho": 0.7733480439383215
+    }
+  ],
+  "all_checks_retain_half_primary_rho": true,
+  "all_leave_one_source_out_effects_positive": true,
+  "runtime_seconds": 0.11819100007414818
+}
