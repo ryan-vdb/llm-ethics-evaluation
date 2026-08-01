@@ -1,0 +1,1004 @@
+{
+  "embedding_view": "L2-normalized response embeddings after exact removal of the paired-question projection",
+  "interpretation_limits": [
+    "Same-question proximity is partly expected because follow-up answers were directly conditioned on the initial answer and share conversational context and wording. It is a descriptive sanity check, not independent evidence of integrity.",
+    "Direction alignment measures shared semantic movement in the embedding space; it does not identify which claims changed or whether conclusions changed."
+  ],
+  "method": "scenario-specific semantic-revision analysis",
+  "randomization": {
+    "monte_carlo_p_value_correction": "(extreme + 1) / (draws + 1)",
+    "permutations": 9999,
+    "revision_direction_alignment": "Question labels are permuted independently by model, with the same model-specific permutations reused across conditions.",
+    "same_question_proximity": "An unrestricted question-label permutation is shared across all models and conditions within each draw; fixed points are allowed under the permutation null.",
+    "seed": 20260801
+  },
+  "revision_direction_alignment": {
+    "aggregate_non_agreement": {
+      "conditions": [
+        "disagreement",
+        "strong_disagreement",
+        "majority_opinion",
+        "lived_experience",
+        "expert_consensus"
+      ],
+      "mismatched_question_mean_direction_cosine": 0.13218731490838997,
+      "null_95th_percentile": 0.15306124930063653,
+      "null_99th_percentile": 0.15734023704141706,
+      "null_mean": 0.14505511897948173,
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.1281989730045215,
+      "same_question_mean_direction_cosine": 0.26038628791291146
+    },
+    "by_condition": [
+      {
+        "condition": "agreement",
+        "mismatched_question_mean_direction_cosine": 0.15510426569461166,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.21098758406344295,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.10038127622481277,
+            "same_question_mean_direction_cosine": 0.3113688602882557
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.22474578313801732,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.11256150839419574,
+            "same_question_mean_direction_cosine": 0.33730729153221306
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.12590488882973006,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.05400645472127302,
+            "same_question_mean_direction_cosine": 0.17991134355100308
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.28825617339332793,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.09411863798017372,
+            "same_question_mean_direction_cosine": 0.38237481137350166
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.15752113052517655,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.06456508013400275,
+            "same_question_mean_direction_cosine": 0.2220862106591793
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.15333950317220268,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.11485054987644372,
+            "same_question_mean_direction_cosine": 0.2681900530486464
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07485210330336217,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.10896649021716887,
+            "same_question_mean_direction_cosine": 0.18381859352053104
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.18360562321958218,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.051038231145851126,
+            "same_question_mean_direction_cosine": 0.2346438543654333
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10799662148558696,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.0489914677156036,
+            "same_question_mean_direction_cosine": 0.15698808920119056
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09076797065862793,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.12006108870580254,
+            "same_question_mean_direction_cosine": 0.21082905936443047
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.2269049339695258,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.09313708024202069,
+            "same_question_mean_direction_cosine": 0.3200420142115465
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.14004836217206904,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.09560086208577356,
+            "same_question_mean_direction_cosine": 0.2356492242578426
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.11117020696690515,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.06914770739014305,
+            "same_question_mean_direction_cosine": 0.1803179143570482
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.0629276711073819,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.09781236490156642,
+            "same_question_mean_direction_cosine": 0.16074003600894832
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.16753542941423671,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.06918321157487478,
+            "same_question_mean_direction_cosine": 0.2367186409891115
+          }
+        ],
+        "null_95th_percentile": 0.1713802641893094,
+        "null_99th_percentile": 0.17478725043901927,
+        "null_mean": 0.16382888901495946,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.08629480075398047,
+        "same_question_mean_direction_cosine": 0.24139906644859213
+      },
+      {
+        "condition": "disagreement",
+        "mismatched_question_mean_direction_cosine": 0.11706164421566544,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.2780667746267751,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.13932583799882076,
+            "same_question_mean_direction_cosine": 0.41739261262559585
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.13631140586348012,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.14554808337070885,
+            "same_question_mean_direction_cosine": 0.28185948923418896
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.08822464248688418,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.10631290139049508,
+            "same_question_mean_direction_cosine": 0.19453754387737926
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.20835079542699578,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10989455149718011,
+            "same_question_mean_direction_cosine": 0.3182453469241759
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1379375347715023,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.13930968811613184,
+            "same_question_mean_direction_cosine": 0.27724722288763415
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10156074476347522,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.15111036225003172,
+            "same_question_mean_direction_cosine": 0.2526711070135069
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.05966039440939328,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.1208586490355642,
+            "same_question_mean_direction_cosine": 0.18051904344495748
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.15407995060280064,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10001012642853316,
+            "same_question_mean_direction_cosine": 0.2540900770313338
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09729851304791948,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1617306066925694,
+            "same_question_mean_direction_cosine": 0.25902911974048887
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.05985259167695455,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.24003932796896232,
+            "same_question_mean_direction_cosine": 0.2998919196459169
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.11103044017730007,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.22252740976772367,
+            "same_question_mean_direction_cosine": 0.33355784994502374
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07649457759208075,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.19881601293253934,
+            "same_question_mean_direction_cosine": 0.2753105905246201
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07858424100483653,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.12331701919390221,
+            "same_question_mean_direction_cosine": 0.20190126019873875
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.05618020613608706,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1679890561312154,
+            "same_question_mean_direction_cosine": 0.22416926226730247
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.11229185064849669,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.11509762618546933,
+            "same_question_mean_direction_cosine": 0.22738947683396601
+          }
+        ],
+        "null_95th_percentile": 0.1430336295028504,
+        "null_99th_percentile": 0.14835330722011073,
+        "null_mean": 0.1320488630445024,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.14945915059732318,
+        "same_question_mean_direction_cosine": 0.2665207948129886
+      },
+      {
+        "condition": "strong_disagreement",
+        "mismatched_question_mean_direction_cosine": 0.11416067634324692,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.2656306763658787,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.109198004190668,
+            "same_question_mean_direction_cosine": 0.3748286805565467
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.17923527045189086,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.08298721875205095,
+            "same_question_mean_direction_cosine": 0.2622224892039418
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.113257722848262,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.04105270695801816,
+            "same_question_mean_direction_cosine": 0.15431042980628015
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1944087504454814,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10512766664507639,
+            "same_question_mean_direction_cosine": 0.2995364170905578
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10094125579682203,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.11700616729879934,
+            "same_question_mean_direction_cosine": 0.21794742309562137
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1277619795329337,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.11501646376710908,
+            "same_question_mean_direction_cosine": 0.24277844330004278
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.0699914193464214,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.13467288105622516,
+            "same_question_mean_direction_cosine": 0.20466430040264658
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.14022131895337203,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.07925768063749042,
+            "same_question_mean_direction_cosine": 0.21947899959086245
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07582254700653826,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.054691361125005306,
+            "same_question_mean_direction_cosine": 0.13051390813154357
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.06731645494124835,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.19421635173086763,
+            "same_question_mean_direction_cosine": 0.261532806672116
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.12954138029158357,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.12794107359936535,
+            "same_question_mean_direction_cosine": 0.2574824538909489
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.06565626805527873,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.16600795947926028,
+            "same_question_mean_direction_cosine": 0.231664227534539
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.0715842427845073,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10950830691245934,
+            "same_question_mean_direction_cosine": 0.18109254969696664
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.046697452196999625,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1121481533719939,
+            "same_question_mean_direction_cosine": 0.15884560556899352
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.06434340613148559,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.10450981262415768,
+            "same_question_mean_direction_cosine": 0.16885321875564327
+          }
+        ],
+        "null_95th_percentile": 0.13421727132438596,
+        "null_99th_percentile": 0.13847084308580657,
+        "null_mean": 0.12525276261001356,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.11022278720990314,
+        "same_question_mean_direction_cosine": 0.22438346355315006
+      },
+      {
+        "condition": "majority_opinion",
+        "mismatched_question_mean_direction_cosine": 0.15998576084464336,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.3611330085921906,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.13970396501276056,
+            "same_question_mean_direction_cosine": 0.5008369736049512
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.16161038331322922,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.14660159629325112,
+            "same_question_mean_direction_cosine": 0.30821197960648034
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.11637035281310275,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.09044398929410936,
+            "same_question_mean_direction_cosine": 0.2068143421072121
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.2541901971427172,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10577046580311972,
+            "same_question_mean_direction_cosine": 0.3599606629458369
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.18572103826627664,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.12893493223341232,
+            "same_question_mean_direction_cosine": 0.31465597049968896
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.142244845884822,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.10261208843146369,
+            "same_question_mean_direction_cosine": 0.2448569343162857
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09580880557760223,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.07967627734719067,
+            "same_question_mean_direction_cosine": 0.1754850829247929
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.21675539188443635,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.09336914832423657,
+            "same_question_mean_direction_cosine": 0.3101245402086729
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1826136026152683,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1075655729073661,
+            "same_question_mean_direction_cosine": 0.2901791755226344
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07530054444855981,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.20158917063176202,
+            "same_question_mean_direction_cosine": 0.27688971508032184
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.16591514686095307,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.1383388362643783,
+            "same_question_mean_direction_cosine": 0.30425398312533136
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09794305139161012,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1196434554691088,
+            "same_question_mean_direction_cosine": 0.21758650686071893
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.12013560109528171,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.11041963044076686,
+            "same_question_mean_direction_cosine": 0.23055523153604857
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07989102751429761,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.09218417184864394,
+            "same_question_mean_direction_cosine": 0.17207519936294155
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1441534152693026,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.08296611434319973,
+            "same_question_mean_direction_cosine": 0.2271195296125023
+          }
+        ],
+        "null_95th_percentile": 0.17974024655328066,
+        "null_99th_percentile": 0.18365775781167246,
+        "null_mean": 0.17159250052261663,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.115987960976318,
+        "same_question_mean_direction_cosine": 0.27597372182096136
+      },
+      {
+        "condition": "lived_experience",
+        "mismatched_question_mean_direction_cosine": 0.15246291257748218,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.3335268156477005,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.15034605844326399,
+            "same_question_mean_direction_cosine": 0.48387287409096447
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.18670662323840345,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.16536119396642704,
+            "same_question_mean_direction_cosine": 0.3520678172048305
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09985529825881029,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.08477478647566561,
+            "same_question_mean_direction_cosine": 0.1846300847344759
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.23631961837648724,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.15659666822622925,
+            "same_question_mean_direction_cosine": 0.3929162866027165
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1477680859689392,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.14065627971695294,
+            "same_question_mean_direction_cosine": 0.28842436568589214
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.19588918400570635,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.1248291197807487,
+            "same_question_mean_direction_cosine": 0.32071830378645505
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.0936835955488029,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.10170814111678878,
+            "same_question_mean_direction_cosine": 0.19539173666559168
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.20804437813397306,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.11864328416739969,
+            "same_question_mean_direction_cosine": 0.32668766230137275
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.1396125941361256,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.09762815849087317,
+            "same_question_mean_direction_cosine": 0.23724075262699876
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10805221059345552,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.24575870872068187,
+            "same_question_mean_direction_cosine": 0.3538109193141374
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.15630020143425147,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.22977803236739971,
+            "same_question_mean_direction_cosine": 0.3860782338016512
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10064515841754508,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.17355548119839653,
+            "same_question_mean_direction_cosine": 0.2742006396159416
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.09335772812187422,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.13749279239700052,
+            "same_question_mean_direction_cosine": 0.23085052051887472
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.08315628744290013,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.13264647633808843,
+            "same_question_mean_direction_cosine": 0.21580276378098856
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10402590933725796,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.1061058376637659,
+            "same_question_mean_direction_cosine": 0.21013174700102386
+          }
+        ],
+        "null_95th_percentile": 0.1769948139424619,
+        "null_99th_percentile": 0.18167195972867836,
+        "null_mean": 0.1669551523481241,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.14439206793797887,
+        "same_question_mean_direction_cosine": 0.29685498051546105
+      },
+      {
+        "condition": "expert_consensus",
+        "mismatched_question_mean_direction_cosine": 0.11726558056091203,
+        "model_pairs": [
+          {
+            "mismatched_question_mean_direction_cosine": 0.2993746345227262,
+            "model_1": "claude_opus",
+            "model_2": "claude_sonnet",
+            "same_minus_mismatched": 0.15681857350925726,
+            "same_question_mean_direction_cosine": 0.4561932080319835
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.14902703580738216,
+            "model_1": "claude_opus",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.10148961460507624,
+            "same_question_mean_direction_cosine": 0.2505166504124584
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.08251904915981866,
+            "model_1": "claude_opus",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.03322971399673029,
+            "same_question_mean_direction_cosine": 0.11574876315654894
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.22614456397870436,
+            "model_1": "claude_opus",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.11765564961644032,
+            "same_question_mean_direction_cosine": 0.3438002135951447
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.10822681448421734,
+            "model_1": "claude_opus",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.10749578042673452,
+            "same_question_mean_direction_cosine": 0.21572259491095186
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.13869638029421436,
+            "model_1": "claude_sonnet",
+            "model_2": "deepseek",
+            "same_minus_mismatched": 0.1552540959492509,
+            "same_question_mean_direction_cosine": 0.29395047624346526
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07136111217886756,
+            "model_1": "claude_sonnet",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.11615046886943461,
+            "same_question_mean_direction_cosine": 0.18751158104830218
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.2026640220426018,
+            "model_1": "claude_sonnet",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.0886057562505635,
+            "same_question_mean_direction_cosine": 0.2912697782931653
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07773602754426819,
+            "model_1": "claude_sonnet",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.09686048491629463,
+            "same_question_mean_direction_cosine": 0.17459651246056282
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.04689558305050979,
+            "model_1": "deepseek",
+            "model_2": "gemini_flash",
+            "same_minus_mismatched": 0.20166107672357883,
+            "same_question_mean_direction_cosine": 0.2485566597740886
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.14347048293122036,
+            "model_1": "deepseek",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.14485103909887023,
+            "same_question_mean_direction_cosine": 0.2883215220300906
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.04799946188851181,
+            "model_1": "deepseek",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.15924878719646343,
+            "same_question_mean_direction_cosine": 0.20724824908497524
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.07168311507334522,
+            "model_1": "gemini_flash",
+            "model_2": "gpt_55",
+            "same_minus_mismatched": 0.10669125330905736,
+            "same_question_mean_direction_cosine": 0.1783743683824026
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.029980047705774743,
+            "model_1": "gemini_flash",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.11610955276824324,
+            "same_question_mean_direction_cosine": 0.14608960047401798
+          },
+          {
+            "mismatched_question_mean_direction_cosine": 0.06320537775151804,
+            "model_1": "gpt_55",
+            "model_2": "grok",
+            "same_minus_mismatched": 0.11187162728026638,
+            "same_question_mean_direction_cosine": 0.17507700503178442
+          }
+        ],
+        "null_95th_percentile": 0.13889036930547677,
+        "null_99th_percentile": 0.1432895084256522,
+        "null_mean": 0.129426316372152,
+        "p_value_holm": 0.0006000000000000001,
+        "permutation_p_value": 0.0001,
+        "same_minus_mismatched": 0.12093289830108407,
+        "same_question_mean_direction_cosine": 0.2381984788619961
+      }
+    ]
+  },
+  "runtime_seconds": 0.08084758301265538,
+  "same_question_semantic_proximity": [
+    {
+      "all_mismatched_questions_mean_cosine": 0.36722920241862406,
+      "condition": "agreement",
+      "null_95th_percentile": 0.45952343438007326,
+      "null_99th_percentile": 0.4907091424217502,
+      "null_mean": 0.3978873434677605,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.33054273240221027,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.5603398831518992
+        },
+        {
+          "mismatched_mean_cosine": 0.36867419208352764,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.6673001657601646
+        },
+        {
+          "mismatched_mean_cosine": 0.38411851006661346,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.7034013877913623
+        },
+        {
+          "mismatched_mean_cosine": 0.3598877900387252,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.6682873047203178
+        },
+        {
+          "mismatched_mean_cosine": 0.3844487902264192,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7254120366624416
+        },
+        {
+          "mismatched_mean_cosine": 0.3757031996942485,
+          "model": "grok",
+          "same_question_mean_cosine": 0.713224573031037
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.3057650227675796,
+      "same_question_mean_cosine": 0.6729942251862037
+    },
+    {
+      "all_mismatched_questions_mean_cosine": 0.37039639558942,
+      "condition": "disagreement",
+      "null_95th_percentile": 0.4555778317700051,
+      "null_99th_percentile": 0.48524830528230845,
+      "null_mean": 0.3989371784962092,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.337277277036647,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.5921978611342057
+        },
+        {
+          "mismatched_mean_cosine": 0.338391805397392,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.573370900302381
+        },
+        {
+          "mismatched_mean_cosine": 0.39858355476549995,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.6825216398435743
+        },
+        {
+          "mismatched_mean_cosine": 0.3707022304961562,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.6453473339915328
+        },
+        {
+          "mismatched_mean_cosine": 0.3975183127074602,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7454089850103317
+        },
+        {
+          "mismatched_mean_cosine": 0.37990519313336474,
+          "model": "grok",
+          "same_question_mean_cosine": 0.6892147555002522
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.28428051704095963,
+      "same_question_mean_cosine": 0.6546769126303796
+    },
+    {
+      "all_mismatched_questions_mean_cosine": 0.3742906416816209,
+      "condition": "strong_disagreement",
+      "null_95th_percentile": 0.46303261131134255,
+      "null_99th_percentile": 0.49362450752215575,
+      "null_mean": 0.4039090773002919,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.3442830779191266,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.6000035724318751
+        },
+        {
+          "mismatched_mean_cosine": 0.3567026446429034,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.6107304788702744
+        },
+        {
+          "mismatched_mean_cosine": 0.38923719182207095,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.6788672838458902
+        },
+        {
+          "mismatched_mean_cosine": 0.3706455673318861,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.6626051027537867
+        },
+        {
+          "mismatched_mean_cosine": 0.4127519471519748,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7534035245766754
+        },
+        {
+          "mismatched_mean_cosine": 0.37212342122176356,
+          "model": "grok",
+          "same_question_mean_cosine": 0.7113859964338796
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.2952086848037761,
+      "same_question_mean_cosine": 0.669499326485397
+    },
+    {
+      "all_mismatched_questions_mean_cosine": 0.36867900916372487,
+      "condition": "majority_opinion",
+      "null_95th_percentile": 0.4503389161600215,
+      "null_99th_percentile": 0.47929259720620104,
+      "null_mean": 0.3960960925701259,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.346478325262008,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.563117861030601
+        },
+        {
+          "mismatched_mean_cosine": 0.3282701738884166,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.519167386316817
+        },
+        {
+          "mismatched_mean_cosine": 0.3925277370142827,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.7011850977688479
+        },
+        {
+          "mismatched_mean_cosine": 0.37548610292658885,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.6326017638894889
+        },
+        {
+          "mismatched_mean_cosine": 0.3914739413975779,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7368674956780861
+        },
+        {
+          "mismatched_mean_cosine": 0.3778377744934753,
+          "model": "grok",
+          "same_question_mean_cosine": 0.6977688869801224
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.2731057394469356,
+      "same_question_mean_cosine": 0.6417847486106605
+    },
+    {
+      "all_mismatched_questions_mean_cosine": 0.35825023218158364,
+      "condition": "lived_experience",
+      "null_95th_percentile": 0.4355747402397402,
+      "null_99th_percentile": 0.4620702037893882,
+      "null_mean": 0.3837337893300933,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.3442020477461821,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.5619991529937524
+        },
+        {
+          "mismatched_mean_cosine": 0.30802278886152,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.49553935574512237
+        },
+        {
+          "mismatched_mean_cosine": 0.3708347880507286,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.6253549273033853
+        },
+        {
+          "mismatched_mean_cosine": 0.3616426037806299,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.5965358736532032
+        },
+        {
+          "mismatched_mean_cosine": 0.396922137473657,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7037106112410111
+        },
+        {
+          "mismatched_mean_cosine": 0.36787702717678394,
+          "model": "grok",
+          "same_question_mean_cosine": 0.6903758177087485
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.2540023909259536,
+      "same_question_mean_cosine": 0.6122526231075373
+    },
+    {
+      "all_mismatched_questions_mean_cosine": 0.37778699430701784,
+      "condition": "expert_consensus",
+      "null_95th_percentile": 0.4624911445891485,
+      "null_99th_percentile": 0.4914822378860948,
+      "null_mean": 0.40603142602747233,
+      "p_value_holm": 0.0006000000000000001,
+      "per_model": [
+        {
+          "mismatched_mean_cosine": 0.35620385084047257,
+          "model": "claude_opus",
+          "same_question_mean_cosine": 0.56854481087052
+        },
+        {
+          "mismatched_mean_cosine": 0.36192288993237987,
+          "model": "claude_sonnet",
+          "same_question_mean_cosine": 0.5838311394585431
+        },
+        {
+          "mismatched_mean_cosine": 0.41009612048129795,
+          "model": "deepseek",
+          "same_question_mean_cosine": 0.7174856113886708
+        },
+        {
+          "mismatched_mean_cosine": 0.36892756086057243,
+          "model": "gemini_flash",
+          "same_question_mean_cosine": 0.6574382526795837
+        },
+        {
+          "mismatched_mean_cosine": 0.3964760052212304,
+          "model": "gpt_55",
+          "same_question_mean_cosine": 0.7371695934262714
+        },
+        {
+          "mismatched_mean_cosine": 0.373095538506154,
+          "model": "grok",
+          "same_question_mean_cosine": 0.6901803949236888
+        }
+      ],
+      "permutation_p_value": 0.0001,
+      "same_minus_mismatched": 0.28132130615086176,
+      "same_question_mean_cosine": 0.6591083004578796
+    }
+  ]
+}

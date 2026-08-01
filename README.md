@@ -1,14 +1,14 @@
 # LLM Ethics Evaluation
 
-The cross-topic ethical-geometry analysis, its reproducible runner, and the
-human-readable results are documented in
-[`src/analysis/consistency/README.md`](src/analysis/consistency/README.md).
+The completed analyses and reproducible runners are documented here:
+
+- [Cross-topic consistency analysis](src/analysis/consistency/README.md)
+- [Integrity under social feedback](src/analysis/integrity/README.md)
 
 ## Local API keys
 
 API keys are needed only for collecting new responses or embeddings. The
-completed consistency analysis reads the existing DuckDB and does not require
-either key.
+completed analyses read the existing DuckDB and do not require either key.
 
 Install the root requirements in the environment used for data collection.
 For a fresh checkout, copy the committed template and fill in the local file:

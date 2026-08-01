@@ -1,0 +1,6 @@
+condition,contrast,mean_difference,question_sign_flip_p,p_value_holm
+disagreement,disagreement minus agreement,0.018317312555824174,0.16015625,0.3203125
+strong_disagreement,strong_disagreement minus agreement,0.0034948987008068403,0.564453125,0.564453125
+majority_opinion,majority_opinion minus agreement,0.031209476575543196,0.015625,0.0625
+lived_experience,lived_experience minus agreement,0.06074160207866649,0.00390625,0.01953125
+expert_consensus,expert_consensus minus agreement,0.013885924728324039,0.103515625,0.310546875

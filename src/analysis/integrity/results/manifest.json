@@ -1,0 +1,119 @@
+{
+  "analysis_source_sha256": "90c06466db285d1ef80e4bc875592680527191c3747d5edf67c12e2160bcf450",
+  "artifacts": [
+    {
+      "bytes": 10701,
+      "path": "REPORT.md",
+      "sha256": "82056ba6ee8d16a49396f9ee760180dcef1841d39cbc634f6828d3ddcf7b3022"
+    },
+    {
+      "bytes": 705,
+      "path": "coding/README.md",
+      "sha256": "44eaf1087cf2983228efa379f6e79f9e94be4e5b1c11ff18a7b59e0866726815"
+    },
+    {
+      "bytes": 1601125,
+      "path": "coding/blinded_stance_coding_template.csv",
+      "sha256": "fe1195d78f74f3727b4c114fe6787a4529e93090635176dd50e39e02fb6925af"
+    },
+    {
+      "bytes": 13344,
+      "path": "coding/coding_key.csv",
+      "sha256": "e748079ad6e4ba8def1a658dffc690a947a7dc4f9b8f43bffbb3d7d3824870bb"
+    },
+    {
+      "bytes": 5558,
+      "path": "methods/consensus_movement.json",
+      "sha256": "e41802692aab840a85ea3daf699dd47172b99f46886187e083040d9330c53e1a"
+    },
+    {
+      "bytes": 32730,
+      "path": "methods/exemplars.json",
+      "sha256": "f14c47b68450731386878bbe65f2fd89047a94ac33e26a2a18ca43a0ee823c5a"
+    },
+    {
+      "bytes": 129983,
+      "path": "methods/lexical_robustness.json",
+      "sha256": "55c00bb88cb4ccf697c5b7e8d6cc4f03f859be7b85423e69900da06560a4fbfb"
+    },
+    {
+      "bytes": 24692,
+      "path": "methods/revision_effects.json",
+      "sha256": "ad76d442d22be1ae701420244d330465ea34527e36d8c6fab88e59cce14b69d1"
+    },
+    {
+      "bytes": 3366,
+      "path": "methods/robustness_checks.json",
+      "sha256": "8e370b73fcf428f97c37075b57c4e04852a54f7d89dd3fa63a6bd0e4243177f7"
+    },
+    {
+      "bytes": 41081,
+      "path": "methods/scenario_specificity.json",
+      "sha256": "ac36b74cd6988762026772aae9c1781a7d55df4cd523b317078bfeebdd49b0a9"
+    },
+    {
+      "bytes": 252127,
+      "path": "summary.json",
+      "sha256": "fbbb2d6693e86a71472e5e6b6eadd1624ee778444533421a1ca78922f833516d"
+    },
+    {
+      "bytes": 1980,
+      "path": "tables/condition_summary.csv",
+      "sha256": "accd1091a3604ddf9d697fd221292463fb02d25ab381f3bda1a154343833f4f4"
+    },
+    {
+      "bytes": 909,
+      "path": "tables/consensus_movement.csv",
+      "sha256": "d4845225d39198c1c294ff9ebf75dc1c6954204be5cd292cc76a9c73dc1b1012"
+    },
+    {
+      "bytes": 665,
+      "path": "tables/cross_model_convergence.csv",
+      "sha256": "cdd7616ea3a945f8d73a7628357d14962363a666fa3bc6beeadc4e01181f3a6a"
+    },
+    {
+      "bytes": 529,
+      "path": "tables/helper_contrasts.csv",
+      "sha256": "706436eb38c9a9d96d593c294f244e6414f76c5348c0225d3d0f0af7ac1a9fc1"
+    },
+    {
+      "bytes": 45367,
+      "path": "tables/lexical_cell_metrics.csv",
+      "sha256": "32f0db3d0677395ecbc2e8dfc4e05fbcee4b060a1b8d842947c67d8b46f37fa6"
+    },
+    {
+      "bytes": 538,
+      "path": "tables/lexical_condition_summary.csv",
+      "sha256": "446f04c9781d90d24b1507a0d7cc9d2055b09a02e20ce307d0fc52cde6a0aefc"
+    },
+    {
+      "bytes": 510,
+      "path": "tables/model_effects.csv",
+      "sha256": "0a441e6c91b533e041007d154d71dd2851505e24d5ce0eba2cb6d582f26e09e5"
+    },
+    {
+      "bytes": 1734,
+      "path": "tables/question_effects.csv",
+      "sha256": "b27604ae83ee9d14a6838ce676e4030bc36b53b6636858980cc5f76d559a98bb"
+    },
+    {
+      "bytes": 24213,
+      "path": "tables/revision_exemplars.csv",
+      "sha256": "c7a8c632403b99ac2d4387b7e7c27df616222e10e4e7684012aa2ff17b487f06"
+    },
+    {
+      "bytes": 527,
+      "path": "tables/robustness_checks.csv",
+      "sha256": "4aeb93c5c278ef2a4395a6cbb92e4b832b70fcb3a591696a7101596b7335c1f3"
+    },
+    {
+      "bytes": 5742,
+      "path": "tables/scenario_proximity.csv",
+      "sha256": "1fa77b6c02f46b99a6797ebf52018b88232437f82500d5c3f428c4c2caf64a9d"
+    }
+  ],
+  "generated_at": "2026-08-01T16:49:41.955009+00:00",
+  "input_database_sha256": "2e3b1f97cf8d9ff085d74591dd08d22f554e2ec185f1062d188d964cc84fbcd7",
+  "manifest_schema_version": 1,
+  "producer": "src.analysis.integrity"
+}

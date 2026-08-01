@@ -1,0 +1,6 @@
+check,scale,opposition_minus_agreement_effect,positive_question_fraction,positive_model_fraction
+raw normalized embeddings,1 - cosine,0.021198107647757505,0.7,0.6666666666666666
+exact paired-question projection,1 - cosine,0.025529842927832953,0.8,0.6666666666666666
+remove full ten-question row span,1 - cosine,0.03031254407047767,0.8,0.6666666666666666
+model-condition centered scenario patterns,1 - cosine,0.04566562055652821,0.8,1.0
+angular distance after paired projection,degrees,1.9518405329596322,0.8,0.6666666666666666

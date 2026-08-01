@@ -1,0 +1,117 @@
+{
+  "checks": [
+    {
+      "check": "raw normalized embeddings",
+      "opposition_minus_agreement_effect": 0.021198107647757505,
+      "positive_model_fraction": 0.6666666666666666,
+      "positive_question_fraction": 0.7,
+      "scale": "1 - cosine"
+    },
+    {
+      "check": "exact paired-question projection",
+      "opposition_minus_agreement_effect": 0.025529842927832953,
+      "positive_model_fraction": 0.6666666666666666,
+      "positive_question_fraction": 0.8,
+      "scale": "1 - cosine"
+    },
+    {
+      "check": "remove full ten-question row span",
+      "opposition_minus_agreement_effect": 0.03031254407047767,
+      "positive_model_fraction": 0.6666666666666666,
+      "positive_question_fraction": 0.8,
+      "scale": "1 - cosine"
+    },
+    {
+      "check": "model-condition centered scenario patterns",
+      "opposition_minus_agreement_effect": 0.04566562055652821,
+      "positive_model_fraction": 1.0,
+      "positive_question_fraction": 0.8,
+      "scale": "1 - cosine"
+    },
+    {
+      "check": "angular distance after paired projection",
+      "opposition_minus_agreement_effect": 1.9518405329596322,
+      "positive_model_fraction": 0.6666666666666666,
+      "positive_question_fraction": 0.8,
+      "scale": "degrees"
+    }
+  ],
+  "full_question_span_rank": 10,
+  "interpretation_boundary": "Length is measured after treatment and is therefore only a diagnostic, not a covariate used to identify the primary effect.",
+  "leave_one_model_out": [
+    {
+      "effect": 0.03400236522145788,
+      "omitted_model": "claude_opus"
+    },
+    {
+      "effect": 0.008481348789092156,
+      "omitted_model": "claude_sonnet"
+    },
+    {
+      "effect": 0.026172116361141858,
+      "omitted_model": "deepseek"
+    },
+    {
+      "effect": 0.024759483648039773,
+      "omitted_model": "gemini_flash"
+    },
+    {
+      "effect": 0.03261581257820625,
+      "omitted_model": "gpt_55"
+    },
+    {
+      "effect": 0.027147930969059795,
+      "omitted_model": "grok"
+    }
+  ],
+  "leave_one_question_out": [
+    {
+      "effect": 0.025590802705782338,
+      "omitted_question_id": 93
+    },
+    {
+      "effect": 0.026139180917912144,
+      "omitted_question_id": 94
+    },
+    {
+      "effect": 0.02531611716771058,
+      "omitted_question_id": 95
+    },
+    {
+      "effect": 0.025149282852498237,
+      "omitted_question_id": 96
+    },
+    {
+      "effect": 0.019961787226661046,
+      "omitted_question_id": 97
+    },
+    {
+      "effect": 0.02276573218900122,
+      "omitted_question_id": 98
+    },
+    {
+      "effect": 0.030401773100389426,
+      "omitted_question_id": 99
+    },
+    {
+      "effect": 0.029836021758130316,
+      "omitted_question_id": 100
+    },
+    {
+      "effect": 0.025927511494485394,
+      "omitted_question_id": 101
+    },
+    {
+      "effect": 0.02421021986575882,
+      "omitted_question_id": 102
+    }
+  ],
+  "max_absolute_residual_question_cosine": 1.0061396160665481e-16,
+  "method": "raw/projection/span/centering/metric and leave-one-unit sensitivity checks",
+  "omit_both_claude_models_effect": 0.014809878121438119,
+  "projection_retained_norm_mean": 0.7147844962465341,
+  "projection_retained_norm_minimum": 0.5151134773864319,
+  "raw_vs_projected_cellwise_spearman": 0.8403740255197443,
+  "runtime_seconds": 0.015084207989275455,
+  "semantic_revision_vs_length_change_spearman": -0.11428995448024971
+}

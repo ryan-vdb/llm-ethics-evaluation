@@ -1,0 +1,137 @@
+{
+  "condition_summary": [
+    {
+      "condition": "agreement",
+      "mean_change_toward_peer_initial_consensus": -0.1467272607820857,
+      "mean_followup_peer_similarity": 0.6798333506503117,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.13229904468907167,
+      "positive_cell_fraction": 0.03333333333333333,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "disagreement",
+      "mean_change_toward_peer_initial_consensus": -0.17378884308043674,
+      "mean_followup_peer_similarity": 0.6527717683519607,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.15253068232132538,
+      "positive_cell_fraction": 0.016666666666666666,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "strong_disagreement",
+      "mean_change_toward_peer_initial_consensus": -0.15566098572325052,
+      "mean_followup_peer_similarity": 0.6708996257091469,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.13369039224788398,
+      "positive_cell_fraction": 0.0,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "majority_opinion",
+      "mean_change_toward_peer_initial_consensus": -0.18669648191209207,
+      "mean_followup_peer_similarity": 0.6398641295203054,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.16289077543261393,
+      "positive_cell_fraction": 0.0,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "lived_experience",
+      "mean_change_toward_peer_initial_consensus": -0.2041710487426679,
+      "mean_followup_peer_similarity": 0.6223895626897296,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.19804373970244576,
+      "positive_cell_fraction": 0.016666666666666666,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "expert_consensus",
+      "mean_change_toward_peer_initial_consensus": -0.1551141982608308,
+      "mean_followup_peer_similarity": 0.6714464131715666,
+      "mean_initial_peer_similarity": 0.8265606114323975,
+      "median_change": -0.13021258226412785,
+      "positive_cell_fraction": 0.016666666666666666,
+      "question_level_sign_flip_p": 0.001953125
+    }
+  ],
+  "condition_vs_agreement": [
+    {
+      "condition": "disagreement",
+      "holm_adjusted_p": 0.09375,
+      "mean_change_relative_to_agreement": -0.02706158229835105,
+      "question_level_sign_flip_p": 0.03125
+    },
+    {
+      "condition": "strong_disagreement",
+      "holm_adjusted_p": 0.26953125,
+      "mean_change_relative_to_agreement": -0.008933724941164815,
+      "question_level_sign_flip_p": 0.134765625
+    },
+    {
+      "condition": "majority_opinion",
+      "holm_adjusted_p": 0.01953125,
+      "mean_change_relative_to_agreement": -0.039969221130006345,
+      "question_level_sign_flip_p": 0.00390625
+    },
+    {
+      "condition": "lived_experience",
+      "holm_adjusted_p": 0.01953125,
+      "mean_change_relative_to_agreement": -0.057443787960582214,
+      "question_level_sign_flip_p": 0.00390625
+    },
+    {
+      "condition": "expert_consensus",
+      "holm_adjusted_p": 0.31640625,
+      "mean_change_relative_to_agreement": -0.00838693747874512,
+      "question_level_sign_flip_p": 0.31640625
+    }
+  ],
+  "cross_model_convergence": [
+    {
+      "condition": "agreement",
+      "mean_change_in_cross_model_similarity": -0.10105699134666937,
+      "mean_followup_cross_model_similarity": 0.6323397315842401,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "disagreement",
+      "mean_change_in_cross_model_similarity": -0.12482396453188031,
+      "mean_followup_cross_model_similarity": 0.6085727583990292,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "strong_disagreement",
+      "mean_change_in_cross_model_similarity": -0.1272010925170973,
+      "mean_followup_cross_model_similarity": 0.6061956304138121,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "majority_opinion",
+      "mean_change_in_cross_model_similarity": -0.1325429222323829,
+      "mean_followup_cross_model_similarity": 0.6008538006985267,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.001953125
+    },
+    {
+      "condition": "lived_experience",
+      "mean_change_in_cross_model_similarity": -0.13052654573082348,
+      "mean_followup_cross_model_similarity": 0.6028701772000861,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.00390625
+    },
+    {
+      "condition": "expert_consensus",
+      "mean_change_in_cross_model_similarity": -0.11206991764807292,
+      "mean_followup_cross_model_similarity": 0.6213268052828366,
+      "mean_initial_cross_model_similarity": 0.7333967229309095,
+      "question_level_sign_flip_p": 0.001953125
+    }
+  ],
+  "interpretation_boundary": "Movement toward unseen peer initial answers is descriptive geometry, not a conformity test. Peer consensus is not a normative ground truth, and whole-response movement can reflect rhetoric or elaboration.",
+  "method": "leave-one-model-out initial-consensus movement and paired cross-model convergence",
+  "runtime_seconds": 0.0042958748526871204
+}
