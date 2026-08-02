@@ -1,0 +1,18 @@
+{
+  "name": "llm-ethics-results-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive, dependency-free dashboard for the LLM ethics analyses.",
+  "scripts": {
+    "data": "node scripts/sync-data.mjs",
+    "dev": "npm run data && node server.mjs --port 3000",
+    "build": "node scripts/build.mjs",
+    "preview": "node server.mjs --root dist --port 3000",
+    "test": "node --check server.mjs && node --check scripts/build.mjs && node --check scripts/sync-data.mjs && node --check src/app.js && node --check src/charts.js && node --test tests/*.test.mjs",
+    "check": "npm run data && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
