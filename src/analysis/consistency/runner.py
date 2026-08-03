@@ -31,6 +31,9 @@ from .methods.clustering import run_clustering_analysis
 from .methods.cross_domain_neighbors import run_neighborhood_analysis
 from .methods.dyadic_regression import run_mrqap_analysis
 from .methods.interpretable_reasoning_topics import run_reasoning_topics
+from .methods.interpretable_wording_regression import (
+    run_interpretable_wording_regression,
+)
 from .methods.kernel_alignment import run_kernel_alignment
 from .methods.projection_artifact_null import run_projection_artifact_null
 from .methods.representational_similarity import run_rsa_analysis
@@ -247,6 +250,7 @@ def build_report(results: dict[str, Any]) -> str:
     artifact = results["projection_artifact_null"]
     robustness = results["robustness_checks"]
     reasoning_topics = results["interpretable_reasoning_topics"]
+    wording_regression = results["interpretable_wording_regression"]
 
     held_out_rhos = [float(row["rho"]) for row in rsa["held_out_models"]]
     pairwise_rhos = [
@@ -600,6 +604,17 @@ def build_report(results: dict[str, Any]) -> str:
                 f"**{reasoning_topics['permutation_p_value']:.4f}**). The basis "
                 "is jointly fit to all responses, so this is not held-out evidence."
             ),
+            (
+                f"- **Cross-fitted NMF wording regression:** answer-only wording "
+                f"similarity learned from the other five models has mean "
+                f"standardized β **"
+                f"{wording_regression['mean_standardized_wording_beta']:.3f}** "
+                f"and raises mean held-out R² from **"
+                f"{wording_regression['mean_controls_only_r_squared']:.3f}** to "
+                f"**{wording_regression['mean_wording_full_r_squared']:.3f}** "
+                f"(ΔR² **"
+                f"{wording_regression['mean_wording_incremental_r_squared']:.3f}**)."
+            ),
             "",
             (
                 "The named axes below come from the all-model descriptive PCA. "
@@ -638,6 +653,115 @@ def build_report(results: dict[str, Any]) -> str:
             f"| {topic['topic']} | {', '.join(topic['top_terms'][:6])} | "
             f"{topic['mean_cross_model_profile_rho']:.3f} |"
         )
+
+    lines.extend(
+        [
+            "",
+            "### Cross-fitted NMF wording regression",
+            "",
+            (
+                "For each held-out model, TF–IDF and NMF are refit using only "
+                "the other five models' question-token-removed answers. Their "
+                "average scenario profiles form an NMF wording-similarity "
+                "matrix; the held-out target is the exactly question-orthogonalized "
+                "answer-similarity matrix."
+            ),
+            "",
+            "```text",
+            wording_regression["equation"],
+            "```",
+            "",
+            (
+                f"On **{wording_regression['primary_definition']['pair_count']:,}** "
+                "different-domain, different-source, bottom-quartile "
+                "question-similarity pairs, mean standardized wording β is "
+                f"**{wording_regression['mean_standardized_wording_beta']:.3f}** "
+                f"(minimum **"
+                f"{wording_regression['minimum_standardized_wording_beta']:.3f}**)."
+            ),
+            (
+                f"Mean R² rises from **"
+                f"{wording_regression['mean_controls_only_r_squared']:.3f}** "
+                f"with question controls alone to **"
+                f"{wording_regression['mean_wording_full_r_squared']:.3f}** "
+                f"after adding cross-model NMF wording similarity: mean ΔR² "
+                f"**{wording_regression['mean_wording_incremental_r_squared']:.3f}**."
+            ),
+            (
+                f"Holm-significant held-out coefficients: **"
+                f"{wording_regression['holm_significant_models']}/{len(MODELS)}**. "
+                "Question-node bootstrap intervals describe conditional "
+                "uncertainty; two-sided nuisance-residual QAP p-values remain "
+                "exploratory."
+            ),
+            "",
+            "| Held-out model | Wording β | 95% node-bootstrap CI | Controls R² | + wording R² | ΔR² | ΔR² CI | Holm p |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in wording_regression["held_out_models"]:
+        lines.append(
+            f"| {row['model']} | {row['standardized_wording_beta']:.3f} | "
+            f"[{row['beta_ci_95_low']:.3f}, {row['beta_ci_95_high']:.3f}] | "
+            f"{row['controls_only_r_squared']:.3f} | "
+            f"{row['wording_full_r_squared']:.3f} | "
+            f"{row['wording_incremental_r_squared']:.3f} | "
+            f"[{row['incremental_r2_ci_95_low']:.3f}, "
+            f"{row['incremental_r2_ci_95_high']:.3f}] | "
+            f"{row['p_value_holm']:.4f} |"
+        )
+
+    rank_deltas = [
+        float(row["mean_incremental_r_squared"])
+        for row in wording_regression["component_count_sensitivity"]
+    ]
+    source_betas = [
+        float(row["mean_standardized_wording_beta"])
+        for row in wording_regression["leave_one_source_out"]
+    ]
+    attribution = wording_regression["descriptive_topic_attribution"]
+    lines.extend(
+        [
+            "",
+            (
+                "Component-count sensitivity (6, 8, 10, 12, 14 topics) keeps "
+                f"mean ΔR² between **{min(rank_deltas):.3f}** and "
+                f"**{max(rank_deltas):.3f}**. Leave-one-source-out mean wording "
+                f"β ranges from **{min(source_betas):.3f}** to "
+                f"**{max(source_betas):.3f}**."
+            ),
+            "",
+            "#### Descriptive topic-coactivation coefficients",
+            "",
+            (
+                "A separate, more flexible model uses a common all-response NMF "
+                "basis and enters all ten topic co-activations in one equation. "
+                "This descriptive model adds mean R² "
+                f"**{attribution['mean_topic_equation_incremental_r_squared']:.3f}** "
+                "beyond question controls; its mean design condition number is "
+                f"**{attribution['mean_design_condition_number']:.2f}**. "
+                "It does not decompose the primary cross-fitted ΔR², and the "
+                "coefficients below have no individual inferential p-values."
+            ),
+            "",
+            "| Topic | Highest-weight terms | Mean standardized β | Range | Positive models |",
+            "|---:|---|---:|---:|---:|",
+        ]
+    )
+    for topic in attribution["topic_coefficients"]:
+        lines.append(
+            f"| {topic['topic']} | {', '.join(topic['top_terms'][:6])} | "
+            f"{topic['mean_standardized_beta']:.3f} | "
+            f"{topic['minimum_standardized_beta']:.3f} to "
+            f"{topic['maximum_standardized_beta']:.3f} | "
+            f"{topic['positive_models']}/{len(MODELS)} |"
+        )
+    lines.extend(
+        [
+            "",
+            wording_regression["interpretation_warning"],
+        ]
+    )
 
     lines.extend(
         [
@@ -780,6 +904,16 @@ def main() -> None:
             ),
         ),
         (
+            "interpretable_wording_regression",
+            lambda: run_interpretable_wording_regression(
+                dataset,
+                components=10,
+                permutations=args.permutations,
+                bootstrap_samples=args.bootstrap_samples,
+                random_state=args.seed,
+            ),
+        ),
+        (
             "robustness_checks",
             lambda: run_robustness_checks(dataset),
         ),
@@ -858,6 +992,7 @@ def main() -> None:
         "cross_domain_neighbors",
         "shared_latent_axes",
         "interpretable_reasoning_topics",
+        "interpretable_wording_regression",
         "robustness_checks",
         "projection_artifact_null",
     )
@@ -890,6 +1025,15 @@ def main() -> None:
     write_rows(
         table_output / "reasoning_topic_profiles.csv",
         results["interpretable_reasoning_topics"]["topic_profiles"],
+    )
+    write_rows(
+        table_output / "wording_regression_held_out_models.csv",
+        results["interpretable_wording_regression"]["held_out_models"],
+    )
+    write_rows(
+        table_output / "wording_regression_topic_coefficients.csv",
+        results["interpretable_wording_regression"]
+        ["descriptive_topic_attribution"]["topic_coefficients"],
     )
     write_rows(
         table_output / "robustness_checks.csv",

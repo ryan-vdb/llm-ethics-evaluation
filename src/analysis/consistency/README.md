@@ -27,6 +27,7 @@ consistency/
 │   ├── cross_domain_neighbors.py
 │   ├── shared_latent_axes.py
 │   ├── interpretable_reasoning_topics.py
+│   ├── interpretable_wording_regression.py
 │   ├── projection_artifact_null.py
 │   └── robustness_checks.py
 ├── tools/
@@ -76,6 +77,7 @@ Remaining question cosine is also controlled continuously in the primary RSA.
 | CKA | Secondary whole-geometry agreement | No |
 | Shared PCA axes | Post-hoc low-dimensional interpretation | No |
 | Answer-only NMF | Post-hoc reasoning-language interpretation | Partial topic control; not independent |
+| Cross-fitted NMF wording regression | Tests whether answer-only wording from five models predicts the sixth model's residual geometry; includes descriptive topic coefficients | Yes; fixed-scenario interpretation |
 
 Clustering uses exact residuals from the canonical loader. It scans a small
 candidate range, selects only through response-geometry stability, and reports

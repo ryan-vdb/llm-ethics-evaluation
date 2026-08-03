@@ -69,7 +69,14 @@ function assertSameSet(left, right, label) {
   }
 }
 
+function assertClose(actual, expected, label, tolerance = 1e-10) {
+  if (!Number.isFinite(actual) || !Number.isFinite(expected) || Math.abs(actual - expected) > tolerance) {
+    throw new Error(`${label} is inconsistent with its component rows`);
+  }
+}
+
 function assertFiniteNumbers(value, label = "dashboard") {
+  if (value === undefined) throw new Error(`${label} is undefined`);
   if (typeof value === "number" && !Number.isFinite(value)) {
     throw new Error(`${label} contains a non-finite number`);
   }
@@ -123,7 +130,9 @@ export async function buildDashboardData() {
   const crossTopic = consistency.cross_domain_neighbors;
   const axes = consistency.shared_latent_axes;
   const topics = consistency.interpretable_reasoning_topics;
+  const wording = consistency.interpretable_wording_regression;
   const clustering = consistency.clustering;
+  const mrqap = consistency.dyadic_regression;
   const strictTopic = rsa.topic_leakage_primary_cross_topic_mask;
 
   const revision = integrity.revision_effects;
@@ -150,8 +159,110 @@ export async function buildDashboardData() {
   assertSameSet(consistency.meta.models, rsa.held_out_models.map((row) => row.model), "held-out model panels");
   assertSameSet(consistency.meta.models, revision.heterogeneity.by_model.map((row) => row.model), "heterogeneity model panels");
   assertSameSet(integrity.meta.panel.question_ids, revision.heterogeneity.by_question.map((row) => row.question_id), "scenario heterogeneity panels");
+  assertUnique(mrqap.held_out_models.map((row) => row.model), "MRQAP held-out models");
+  assertUnique(mrqap.raw_held_out_models.map((row) => row.model), "raw MRQAP held-out models");
+  assertUnique(mrqap.leave_one_source_out.map((row) => row.omitted_source), "MRQAP source omissions");
+  if (mrqap.leave_one_source_out.length === 0) throw new Error("MRQAP source-omission checks are missing");
+  assertSameSet(consistency.meta.models, mrqap.held_out_models.map((row) => row.model), "MRQAP model panels");
+  assertSameSet(consistency.meta.models, mrqap.raw_held_out_models.map((row) => row.model), "raw MRQAP model panels");
+  for (const row of mrqap.held_out_models) {
+    if (!(row.beta_ci_95_low <= row.standardized_consensus_beta && row.standardized_consensus_beta <= row.beta_ci_95_high)) {
+      throw new Error(`MRQAP beta interval does not contain the estimate for ${row.model}`);
+    }
+    if (!(row.incremental_r2_ci_95_low <= row.incremental_r_squared && row.incremental_r_squared <= row.incremental_r2_ci_95_high)) {
+      throw new Error(`MRQAP incremental R-squared interval does not contain the estimate for ${row.model}`);
+    }
+    if (row.full_r_squared < row.topic_only_r_squared) {
+      throw new Error(`MRQAP full R-squared is below topic-only R-squared for ${row.model}`);
+    }
+    assertClose(row.full_r_squared - row.topic_only_r_squared, row.incremental_r_squared, `MRQAP incremental R-squared for ${row.model}`);
+    for (const [name, value] of [["p", row.p_value], ["BH q", row.q_value_bh], ["Holm p", row.p_value_holm]]) {
+      if (!Number.isFinite(value) || value < 0 || value > 1) throw new Error(`Invalid MRQAP ${name} for ${row.model}`);
+    }
+  }
+  if (!Array.isArray(mrqap.primary_definition.topic_covariates) || mrqap.primary_definition.topic_covariates.length === 0) {
+    throw new Error("MRQAP topic covariates are missing");
+  }
+  if (typeof mrqap.primary_definition.different_exact_domain !== "boolean" || typeof mrqap.primary_definition.different_source !== "boolean") {
+    throw new Error("MRQAP domain/source mask flags are invalid");
+  }
+  if (!Number.isInteger(mrqap.primary_definition.pair_count) || mrqap.primary_definition.pair_count <= 0) {
+    throw new Error("MRQAP pair count is invalid");
+  }
+  const mrqapBetas = mrqap.held_out_models.map((row) => row.standardized_consensus_beta);
+  const mrqapIncrements = mrqap.held_out_models.map((row) => row.incremental_r_squared);
+  assertClose(mean(mrqapBetas), mrqap.mean_standardized_beta, "MRQAP mean beta");
+  assertClose(Math.min(...mrqapBetas), mrqap.min_standardized_beta, "MRQAP minimum beta");
+  assertClose(mean(mrqapIncrements), mrqap.mean_incremental_r_squared, "MRQAP mean incremental R-squared");
+  for (const row of mrqap.leave_one_source_out) {
+    if (!Number.isInteger(row.remaining_pair_count) || row.remaining_pair_count <= 0) {
+      throw new Error(`Invalid MRQAP pair count after omitting ${row.omitted_source}`);
+    }
+  }
+  assertUnique(wording.held_out_models.map((row) => row.model), "wording-regression held-out models");
+  assertSameSet(consistency.meta.models, wording.held_out_models.map((row) => row.model), "wording-regression model panels");
+  if (!Number.isInteger(wording.primary_definition.pair_count) || wording.primary_definition.pair_count <= 0) {
+    throw new Error("wording-regression pair count is invalid");
+  }
+  if (wording.primary_definition.different_exact_domain !== true || wording.primary_definition.different_source !== true) {
+    throw new Error("wording regression must retain the strict cross-topic/source mask");
+  }
+  if (!Array.isArray(wording.primary_definition.controls) || wording.primary_definition.controls.length === 0) {
+    throw new Error("wording-regression controls are missing");
+  }
+  for (const row of wording.held_out_models) {
+    if (row.alternative !== "two-sided") throw new Error(`wording-regression test is not two-sided for ${row.model}`);
+    if (!(row.beta_ci_95_low <= row.standardized_wording_beta && row.standardized_wording_beta <= row.beta_ci_95_high)) {
+      throw new Error(`wording-regression beta interval does not contain the estimate for ${row.model}`);
+    }
+    if (!(row.incremental_r2_ci_95_low <= row.wording_incremental_r_squared && row.wording_incremental_r_squared <= row.incremental_r2_ci_95_high)) {
+      throw new Error(`wording-regression incremental R-squared interval does not contain the estimate for ${row.model}`);
+    }
+    if (row.wording_full_r_squared < row.controls_only_r_squared) {
+      throw new Error(`wording-regression full R-squared is below controls-only R-squared for ${row.model}`);
+    }
+    assertClose(
+      row.wording_full_r_squared - row.controls_only_r_squared,
+      row.wording_incremental_r_squared,
+      `wording-regression incremental R-squared for ${row.model}`,
+    );
+    for (const [name, value] of [["p", row.p_value], ["BH q", row.q_value_bh], ["Holm p", row.p_value_holm]]) {
+      if (!Number.isFinite(value) || value < 0 || value > 1) throw new Error(`Invalid wording-regression ${name} for ${row.model}`);
+    }
+  }
+  const wordingBetas = wording.held_out_models.map((row) => row.standardized_wording_beta);
+  const wordingControlsR2 = wording.held_out_models.map((row) => row.controls_only_r_squared);
+  const wordingFullR2 = wording.held_out_models.map((row) => row.wording_full_r_squared);
+  const wordingIncrements = wording.held_out_models.map((row) => row.wording_incremental_r_squared);
+  assertClose(mean(wordingBetas), wording.mean_standardized_wording_beta, "wording-regression mean beta");
+  assertClose(Math.min(...wordingBetas), wording.minimum_standardized_wording_beta, "wording-regression minimum beta");
+  assertClose(mean(wordingControlsR2), wording.mean_controls_only_r_squared, "wording-regression controls-only R-squared");
+  assertClose(mean(wordingFullR2), wording.mean_wording_full_r_squared, "wording-regression full R-squared");
+  assertClose(mean(wordingIncrements), wording.mean_wording_incremental_r_squared, "wording-regression mean incremental R-squared");
+  const wordingAttribution = wording.descriptive_topic_attribution;
+  assertUnique(wordingAttribution.topic_coefficients.map((row) => row.topic), "wording-regression topic coefficients");
+  if (wordingAttribution.topic_coefficients.length !== wording.primary_definition.components) {
+    throw new Error("wording-regression topic coefficients do not match the declared NMF rank");
+  }
+  if (!wording.component_count_sensitivity.some((row) => row.components === wording.primary_definition.components)) {
+    throw new Error("wording-regression component sensitivity omits the primary rank");
+  }
+  if (wording.leave_one_source_out.length === 0) throw new Error("wording-regression source-omission checks are missing");
   if ((clustering.selected_k === null) !== (clustering.selected_metrics === null)) {
     throw new Error("clustering selected_k and selected_metrics must both be present or both be null");
+  }
+  if (clustering.selected_k !== null) {
+    assertUnique(clustering.cluster_profiles.map((row) => row.cluster), "clustering profile identifiers");
+    if (clustering.selected_metrics.k !== clustering.selected_k || clustering.cluster_profiles.length !== clustering.selected_k) {
+      throw new Error("clustering profile count does not match selected k");
+    }
+    const profileSize = clustering.cluster_profiles.reduce((total, row) => total + row.size, 0);
+    if (profileSize !== consistency.meta.questions) throw new Error("clustering profiles do not cover the question panel");
+    assertSameSet(
+      clustering.selected_metrics.cluster_sizes,
+      clustering.cluster_profiles.map((row) => row.size),
+      "clustering profile sizes",
+    );
   }
 
   const dashboard = {
@@ -195,6 +306,52 @@ export async function buildDashboardData() {
         p: row.p_value,
         holm: row.p_value_holm,
       })),
+      mrqap: {
+        method: mrqap.method,
+        definition: {
+          pairCount: mrqap.primary_definition.pair_count,
+          questionSimilarityQuantile: mrqap.primary_definition.question_similarity_quantile,
+          questionSimilarityCutoff: mrqap.primary_definition.question_similarity_cutoff,
+          differentExactDomain: mrqap.primary_definition.different_exact_domain,
+          differentSource: mrqap.primary_definition.different_source,
+          topicCovariates: mrqap.primary_definition.topic_covariates,
+          permutationNote: mrqap.primary_definition.permutation_note,
+        },
+        headline: {
+          meanBeta: mrqap.mean_standardized_beta,
+          minimumBeta: mrqap.min_standardized_beta,
+          meanIncrementalR2: mrqap.mean_incremental_r_squared,
+          meanRawBeta: mrqap.mean_raw_standardized_beta,
+        },
+        heldOutModels: mrqap.held_out_models.map((row) => ({
+          model: row.model,
+          beta: row.standardized_consensus_beta,
+          topicOnlyR2: row.topic_only_r_squared,
+          fullR2: row.full_r_squared,
+          incrementalR2: row.incremental_r_squared,
+          p: row.p_value,
+          alternative: row.alternative,
+          bh: row.q_value_bh,
+          holm: row.p_value_holm,
+          betaLow: row.beta_ci_95_low,
+          betaHigh: row.beta_ci_95_high,
+          incrementalLow: row.incremental_r2_ci_95_low,
+          incrementalHigh: row.incremental_r2_ci_95_high,
+        })),
+        rawHeldOutModels: mrqap.raw_held_out_models.map((row) => ({
+          model: row.model,
+          beta: row.standardized_consensus_beta,
+          topicOnlyR2: row.topic_only_r_squared,
+          fullR2: row.full_r_squared,
+          incrementalR2: row.incremental_r_squared,
+        })),
+        leaveOneSourceOut: mrqap.leave_one_source_out.map((row) => ({
+          omittedSource: row.omitted_source,
+          remainingPairs: row.remaining_pair_count,
+          meanBeta: row.mean_beta,
+          meanIncrementalR2: row.mean_incremental_r_squared,
+        })),
+      },
       topicRemoval: {
         rawQuestionCosine: consistency.meta.orthogonalization.raw_question_cosine_mean,
         maximumResidualQuestionCosine: consistency.meta.orthogonalization.post_question_cosine_abs_max,
@@ -256,10 +413,83 @@ export async function buildDashboardData() {
         partialRho: topics.topic_vs_residual_partial_rho,
         p: topics.permutation_p_value,
       },
+      wordingRegression: {
+        method: wording.method,
+        equation: wording.equation,
+        definition: {
+          components: wording.primary_definition.components,
+          pairCount: wording.primary_definition.pair_count,
+          questionSimilarityQuantile: wording.primary_definition.question_similarity_quantile,
+          questionSimilarityCutoff: wording.primary_definition.question_similarity_cutoff,
+          differentExactDomain: wording.primary_definition.different_exact_domain,
+          differentSource: wording.primary_definition.different_source,
+          controls: wording.primary_definition.controls,
+          heldOutProfileRule: wording.primary_definition.held_out_profile_rule,
+          permutationNote: wording.primary_definition.permutation_note,
+        },
+        headline: {
+          meanBeta: wording.mean_standardized_wording_beta,
+          minimumBeta: wording.minimum_standardized_wording_beta,
+          controlsOnlyR2: wording.mean_controls_only_r_squared,
+          fullR2: wording.mean_wording_full_r_squared,
+          incrementalR2: wording.mean_wording_incremental_r_squared,
+          holmSignificantModels: wording.holm_significant_models,
+        },
+        heldOutModels: wording.held_out_models.map((row) => ({
+          model: row.model,
+          beta: row.standardized_wording_beta,
+          controlsOnlyR2: row.controls_only_r_squared,
+          fullR2: row.wording_full_r_squared,
+          incrementalR2: row.wording_incremental_r_squared,
+          p: row.p_value,
+          alternative: row.alternative,
+          bh: row.q_value_bh,
+          holm: row.p_value_holm,
+          betaLow: row.beta_ci_95_low,
+          betaHigh: row.beta_ci_95_high,
+          incrementalLow: row.incremental_r2_ci_95_low,
+          incrementalHigh: row.incremental_r2_ci_95_high,
+          questionRho: row.wording_vs_question_spearman_rho,
+        })),
+        componentSensitivity: wording.component_count_sensitivity.map((row) => ({
+          components: row.components,
+          meanBeta: row.mean_standardized_wording_beta,
+          minimumBeta: row.minimum_standardized_wording_beta,
+          meanIncrementalR2: row.mean_incremental_r_squared,
+          minimumIncrementalR2: row.minimum_incremental_r_squared,
+        })),
+        leaveOneSourceOut: wording.leave_one_source_out.map((row) => ({
+          omittedSource: row.omitted_source,
+          remainingPairs: row.remaining_pair_count,
+          meanBeta: row.mean_standardized_wording_beta,
+          meanIncrementalR2: row.mean_incremental_r_squared,
+        })),
+        recurringTerms: wording.recurring_fold_basis_terms,
+        attribution: {
+          basisFitScope: wordingAttribution.basis_fit_scope,
+          meanConditionNumber: wordingAttribution.mean_design_condition_number,
+          maximumConditionNumber: wordingAttribution.maximum_design_condition_number,
+          controlsOnlyR2: wordingAttribution.mean_controls_only_r_squared,
+          fullR2: wordingAttribution.mean_full_topic_equation_r_squared,
+          incrementalR2: wordingAttribution.mean_topic_equation_incremental_r_squared,
+          topics: wordingAttribution.topic_coefficients.map((row) => ({
+            topic: row.topic,
+            label: row.label,
+            terms: row.top_terms.slice(0, 6),
+            beta: row.mean_standardized_beta,
+            minimumBeta: row.minimum_standardized_beta,
+            maximumBeta: row.maximum_standardized_beta,
+            positiveModels: row.positive_models,
+            byModel: row.by_model,
+          })),
+        },
+        warning: wording.interpretation_warning,
+      },
       clustering: {
         selectedK: clustering.selected_k,
         status: clustering.selection_status,
         metrics: clustering.selected_metrics,
+        interpretationWarning: clustering.interpretation_warning,
         profiles: (clustering.cluster_profiles || []).map((row) => ({
           cluster: row.cluster,
           size: row.size,
@@ -267,7 +497,16 @@ export async function buildDashboardData() {
           terms: row.distinctive_researcher_conflict_terms.slice(0, 6),
           domains: row.unique_domains,
           sources: row.unique_sources,
+          largestSourceShare: row.largest_source_share,
+          meanResidualSimilarity: row.mean_residual_similarity,
+          meanQuestionSimilarity: row.mean_question_similarity,
           strictPairs: row.strict_cross_topic_within_pair_count,
+          exemplars: row.exemplar_questions.slice(0, 3).map((item) => ({
+            id: item.question_id,
+            domain: item.domain,
+            conflict: item.conflict,
+            question: item.question,
+          })),
         })),
       },
       stablePairs: crossTopic.stable_cross_topic_pairs.slice(0, 12).map((row) => ({

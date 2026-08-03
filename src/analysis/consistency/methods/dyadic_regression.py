@@ -106,8 +106,9 @@ def mrqap_permutation_test(
     *,
     permutations: int,
     random_state: int,
-) -> dict[str, float]:
-    """One-sided complete-network nuisance-residual QAP sensitivity test.
+    alternative: str = "greater",
+) -> dict[str, float | str]:
+    """Complete-network nuisance-residual QAP sensitivity test.
 
     A topic-only model is first fit over the complete off-diagonal network.
     Its symmetric residual matrix is node-permuted, added back to the fitted
@@ -163,11 +164,21 @@ def mrqap_permutation_test(
         )["standardized_consensus_beta"]
 
     beta = observed["standardized_consensus_beta"]
-    p_value = float((1 + np.sum(null_betas >= beta)) / (permutations + 1))
+    if alternative == "greater":
+        exceedances = np.sum(null_betas >= beta)
+    elif alternative == "two-sided":
+        null_center = float(np.mean(null_betas))
+        exceedances = np.sum(
+            np.abs(null_betas - null_center) >= abs(beta - null_center)
+        )
+    else:
+        raise ValueError("alternative must be 'greater' or 'two-sided'")
+    p_value = float((1 + exceedances) / (permutations + 1))
     null_std = float(np.std(null_betas, ddof=1))
     return {
         **observed,
         "p_value": p_value,
+        "alternative": alternative,
         "null_beta_mean": float(np.mean(null_betas)),
         "null_beta_std": null_std,
         "z_score": (

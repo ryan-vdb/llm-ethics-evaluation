@@ -1,63 +1,68 @@
 {
   "producer": "src.analysis.consistency",
   "manifest_schema_version": 1,
-  "generated_at": "2026-07-31T02:53:44.245458+00:00",
-  "analysis_source_sha256": "bf9f25f5d76104687008ae86d20246702ee6bd1f01698a25d2efdef090987f4f",
+  "generated_at": "2026-08-02T23:42:01.785261+00:00",
+  "analysis_source_sha256": "e7197621696771e6ed3a8083d743455179eeb9338ae519cbb4dfea365a348534",
   "artifacts": [
     {
       "path": "REPORT.md",
-      "bytes": 11835,
-      "sha256": "ed17af2a018a7e0fd6697818058b4fdcc5f19dbb8c6624b2abcc788792f0c5bd"
+      "bytes": 15830,
+      "sha256": "a368026f3d10b4c5add016c105f8e5618e401f0ac884ba21d847a156ec658a4f"
     },
     {
       "path": "methods/clustering.json",
       "bytes": 144882,
-      "sha256": "92a01cb0edfea9cad7d9aec199afb36e6ba7ccf76a374dfc44fcd51e6dce19a9"
+      "sha256": "f1db22a291637bec7e977242cc84371972f8ee82c337cf4f2a5c5a6c72062162"
     },
     {
       "path": "methods/cross_domain_neighbors.json",
-      "bytes": 67674,
-      "sha256": "21686f0a509444f367eeada066a7964be20adf45511ff33962ef7410e3302260"
+      "bytes": 67673,
+      "sha256": "2fa7ecec2a8fc3493be485ebb4ddbb034279c4da5ba0f6a970cd8100faa6575f"
     },
     {
       "path": "methods/dyadic_regression.json",
-      "bytes": 7887,
-      "sha256": "0498a850f1bf71556f663779a0fe02a4f00c527b0d74ffc31ade5c3cb14873c1"
+      "bytes": 8078,
+      "sha256": "03aaf8e7a68399342d14b7afaa9d8288b518aa550154706b5fa3b67cb4e2605c"
     },
     {
       "path": "methods/interpretable_reasoning_topics.json",
-      "bytes": 54953,
-      "sha256": "0a16c9e47ca2a61b3d354d140614b682101040aa3e9a77cdc52820e66525a452"
+      "bytes": 54975,
+      "sha256": "438d7ac676c0287171cf543b493a48bbabfe8ac5556d1ff989364d290994dc37"
+    },
+    {
+      "path": "methods/interpretable_wording_regression.json",
+      "bytes": 38935,
+      "sha256": "2202b08e05c43d2f5492fcabdfba4353c53b7e147cfbe264af4ec98473be77f7"
     },
     {
       "path": "methods/kernel_alignment.json",
       "bytes": 4465,
-      "sha256": "bf5a7d757348de2fb0975e93e4a58ef091430dfb13ba916b88079e508fb472f1"
+      "sha256": "2c2626c302851ce9139d6a26c4d108594b70e1653a441a4425007e69ee936626"
     },
     {
       "path": "methods/projection_artifact_null.json",
       "bytes": 2592,
-      "sha256": "a4b9a44995a8e4fbeee21cb6d2161b1d79b0a4ce6faf5a0845c6a579809d3dc0"
+      "sha256": "7c0dc0df1b06a7981925953e60106ed858d0997a1f0182b5c1e61adbe7d5e5eb"
     },
     {
       "path": "methods/representational_similarity.json",
       "bytes": 12247,
-      "sha256": "c790a3fa939199e3573aa0e372cb754ca3a21b0132fe37019b3cbdbc52be5a1d"
+      "sha256": "853ef269790a7058eb7cb4f757efe83b490870b9add7c5d3cdfcf5543e87f110"
     },
     {
       "path": "methods/robustness_checks.json",
       "bytes": 5013,
-      "sha256": "0644e9123502a59b2a63f3d5aa238650a0d27ca510a4542d19ae09aa07a18a4a"
+      "sha256": "6d5dad756d0cf4b3c055a71d08d7fe26180dc3bf4c9a57a88e6202821850f333"
     },
     {
       "path": "methods/shared_latent_axes.json",
-      "bytes": 65984,
-      "sha256": "3a42dd0f4eebf85dbe2a4dfa6938b19bec5c184bc33150ca47ae6684fab9ab0a"
+      "bytes": 65983,
+      "sha256": "180e673f222e19bb6832ec2818d525399903b3f679e77a18db8c65ce1a3917a1"
     },
     {
       "path": "summary.json",
-      "bytes": 381159,
-      "sha256": "cbe12278487d7b8c0068acce9554989810724dcfa57632eb8f5f6cbba10e10fd"
+      "bytes": 423203,
+      "sha256": "fe5e854a88e54a325fbda2f5ccb43c76ba4ee780e27fc436f3fec6eda2fdffe5"
     },
     {
       "path": "tables/clustering_clusters.csv",
@@ -76,8 +81,8 @@
     },
     {
       "path": "tables/mrqap_held_out_models.csv",
-      "bytes": 1803,
-      "sha256": "4f2b7b5b77f8e8adee08b3286ceedecc4b16091120c4f114da39168e0e8d4b72"
+      "bytes": 1863,
+      "sha256": "4aafbc6749af57f5ba096dec541f9f2552befe423adb61e8a60c3cfa1e3bdea1"
     },
     {
       "path": "tables/neighbor_recovery_held_out_models.csv",
@@ -108,6 +113,16 @@
       "path": "tables/stable_cross_topic_pairs.csv",
       "bytes": 39736,
       "sha256": "b517de7f2c1814613ca5a0f7fccef6ce5d94180e399e876397b0661bb7486e24"
+    },
+    {
+      "path": "tables/wording_regression_held_out_models.csv",
+      "bytes": 9941,
+      "sha256": "604dbdf976420657ccc555db9db57370a2e7576838e9f73262cb863115cf72d3"
+    },
+    {
+      "path": "tables/wording_regression_topic_coefficients.csv",
+      "bytes": 4984,
+      "sha256": "4bcca85212604464d0fe541fa5a5fdc5408f7caeb9576b4cbfd76a00ec72c994"
     }
   ]
 }

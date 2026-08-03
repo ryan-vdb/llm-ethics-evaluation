@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-07-31T02:53:44.245458+00:00",
+    "generated_at": "2026-08-02T23:42:01.785261+00:00",
     "random_seed": 42,
     "questions": 93,
     "models": [
@@ -16,15 +16,15 @@
     "artifact_permutations": 999,
     "node_bootstrap_samples": 2000,
     "reproducibility": {
-      "python": "3.13.1",
+      "python": "3.12.13",
       "packages": {
-        "duckdb": "1.5.5",
+        "duckdb": "1.5.4",
         "numpy": "2.5.1",
         "scipy": "1.18.0",
         "scikit-learn": "1.9.0"
       },
       "input_database_sha256": "2e3b1f97cf8d9ff085d74591dd08d22f554e2ec185f1062d188d964cc84fbcd7",
-      "analysis_source_sha256": "bf9f25f5d76104687008ae86d20246702ee6bd1f01698a25d2efdef090987f4f",
+      "analysis_source_sha256": "e7197621696771e6ed3a8083d743455179eeb9338ae519cbb4dfea365a348534",
       "embedding_model_declared_in_current_source": "openai/text-embedding-3-large; the database does not store per-row embedding-model metadata"
     },
     "orthogonalization": {
@@ -34,7 +34,7 @@
       "post_question_cosine_abs_max": 1.0061396160665481e-16,
       "residual_rows_l2_normalized": true
     },
-    "total_runtime_seconds": 228.40743158292025
+    "total_runtime_seconds": 250.62029720796272
   },
   "representational_similarity": {
     "method": "cross-topic partial Spearman RSA with node permutations",
@@ -511,7 +511,7 @@
         "max_held_out_rho": 0.8455273603915336
       }
     ],
-    "runtime_seconds": 25.220377540914342
+    "runtime_seconds": 25.205080083105713
   },
   "clustering": {
     "method": "exploratory KMeans consensus clustering with held-out model-view stability diagnostics",
@@ -3240,7 +3240,7 @@
       }
     ],
     "interpretation_warning": "A stable partition can still be an arbitrary cut through a continuous semantic manifold. These are candidate partitions of this fixed response corpus, not discrete ethical frameworks.",
-    "runtime_seconds": 85.96749316691421
+    "runtime_seconds": 83.80669416696765
   },
   "dyadic_regression": {
     "method": "leave-one-model-out topic-controlled nuisance-residual MRQAP sensitivity",
@@ -3265,6 +3265,7 @@
         "full_r_squared": 0.6778044498107235,
         "incremental_r_squared": 0.6649668780423875,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": -0.00010262871767668598,
         "null_beta_std": 0.08190727917821905,
         "z_score": 10.067146201910585,
@@ -3282,6 +3283,7 @@
         "full_r_squared": 0.5848686117664972,
         "incremental_r_squared": 0.5763231444359196,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": 0.0009286631542502593,
         "null_beta_std": 0.08182405324801614,
         "z_score": 9.375178879899888,
@@ -3299,6 +3301,7 @@
         "full_r_squared": 0.6247878280432619,
         "incremental_r_squared": 0.6078498942373064,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": 0.0009679774218516882,
         "null_beta_std": 0.08550416068067924,
         "z_score": 9.201234545765594,
@@ -3316,6 +3319,7 @@
         "full_r_squared": 0.7288717649411243,
         "incremental_r_squared": 0.6989196824795297,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": -0.0003227630052040079,
         "null_beta_std": 0.08352373273843748,
         "z_score": 10.105809772250185,
@@ -3333,6 +3337,7 @@
         "full_r_squared": 0.630587311785398,
         "incremental_r_squared": 0.6183931379636973,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": -8.836767531333275e-05,
         "null_beta_std": 0.0849599572640617,
         "z_score": 9.359568999391605,
@@ -3350,6 +3355,7 @@
         "full_r_squared": 0.7012860603976777,
         "incremental_r_squared": 0.6788968328290914,
         "p_value": 0.0001,
+        "alternative": "greater",
         "null_beta_mean": 0.0006519845052139334,
         "null_beta_std": 0.08199398076726956,
         "z_score": 10.140362482859489,
@@ -3453,7 +3459,7 @@
         "mean_incremental_r_squared": 0.656722492031867
       }
     ],
-    "runtime_seconds": 19.127150874817744
+    "runtime_seconds": 19.05825729109347
   },
   "kernel_alignment": {
     "method": "leave-one-model-out linear CKA using unbiased HSIC estimators",
@@ -3626,7 +3632,7 @@
       }
     ],
     "interpretation": "CKA measures agreement between whole geometries and is invariant to isotropic scaling and orthogonal rotations. This ratio uses unbiased HSIC terms, but the ratio itself is not unbiased and can be negative under the null.",
-    "runtime_seconds": 5.477300665806979
+    "runtime_seconds": 5.774006250081584
   },
   "cross_domain_neighbors": {
     "method": "leave-one-model-out cross-topic nearest-neighbor recovery",
@@ -5179,7 +5185,7 @@
         }
       }
     ],
-    "runtime_seconds": 43.38425645790994
+    "runtime_seconds": 43.4020620000083
   },
   "shared_latent_axes": {
     "method": "leave-one-model-out consensus PCA axis recovery",
@@ -6128,7 +6134,7 @@
       "interpretation": "Each fold tests its own training-defined PCA axes. Because PCA components can swap or rotate across folds, these tests are summarized across the six-dimensional set and are not attached to the post-hoc labels from the all-model descriptive fit."
     },
     "interpretation_warning": "This is a secondary whole-geometry analysis, not topic-controlled. Axes are learned without ethical labels. Descriptive names are assigned afterward from extreme-question annotations and are not independent validation or mapped to fold-specific component numbers.",
-    "runtime_seconds": 20.036537625128403
+    "runtime_seconds": 20.00134670897387
   },
   "interpretable_reasoning_topics": {
     "method": "answer-only TF-IDF plus non-negative matrix factorization",
@@ -6136,6 +6142,7 @@
     "vocabulary_size": 4247,
     "components": 10,
     "reconstruction_error": 22.37872095961457,
+    "iterations": 759,
     "question_similarity_cutoff": 0.24955412720042297,
     "cross_topic_pair_count": 992,
     "topic_vs_residual_partial_rho": 0.3298719250430614,
@@ -6784,7 +6791,1430 @@
       }
     ],
     "interpretation_warning": "The TF-IDF vocabulary and NMF basis are jointly fit to all response texts. Topics are sparse post-hoc descriptions of the same texts used for embedding geometry, so their cross-model concordance aids interpretation but is not held-out or independent validation.",
-    "runtime_seconds": 4.043934167129919
+    "runtime_seconds": 3.8663364588283002
+  },
+  "interpretable_wording_regression": {
+    "method": "leave-one-model-out answer-only NMF wording-similarity nuisance-residual QAP regression",
+    "equation": "z(Y^m_ij) = beta_0 + beta_1 z(Q_ij) + beta_2 z([z(Q_ij)]^2) + beta_W z(W^-m_ij) + error_ij",
+    "primary_definition": {
+      "components": 10,
+      "pair_count": 992,
+      "different_exact_domain": true,
+      "different_source": true,
+      "question_similarity_quantile": 0.25,
+      "question_similarity_cutoff": 0.24955412720042297,
+      "controls": [
+        "question cosine",
+        "question cosine squared"
+      ],
+      "held_out_profile_rule": "For held-out model m, fit TF-IDF/NMF only on the other five models and average their topic mixtures by question.",
+      "question_token_removal": true,
+      "permutation_note": "Complete-network nuisance residuals are node-permuted before refitting the strict masked coefficient; two-sided p-values are exploratory and Holm-adjusted across held-out models."
+    },
+    "held_out_models": [
+      {
+        "model": "claude_sonnet",
+        "standardized_wording_beta": 0.22104662865220578,
+        "controls_only_r_squared": 0.008097178029496388,
+        "wording_full_r_squared": 0.055022951729013836,
+        "wording_incremental_r_squared": 0.04692577369951745,
+        "p_value": 0.0046,
+        "alternative": "two-sided",
+        "null_beta_mean": 0.00021040868542078348,
+        "null_beta_std": 0.07818694821630919,
+        "z_score": 2.824463993092907,
+        "beta_ci_95_low": 0.04774616570773509,
+        "beta_ci_95_high": 0.3706643261014918,
+        "incremental_r2_ci_95_low": 0.002278869806747941,
+        "incremental_r2_ci_95_high": 0.1333852241269772,
+        "wording_vs_question_spearman_rho": 0.19446742493178296,
+        "fold_basis": {
+          "held_out_model": "claude_sonnet",
+          "training_documents": 465,
+          "vocabulary_size": 3671,
+          "reconstruction_error": 20.341951683444996,
+          "iterations": 229,
+          "component_top_terms": [
+            [
+              "especially",
+              "strongest",
+              "central",
+              "use",
+              "time",
+              "matters",
+              "best",
+              "possible"
+            ],
+            [
+              "being",
+              "well being",
+              "well",
+              "suffering",
+              "human",
+              "overall",
+              "net",
+              "immediate"
+            ],
+            [
+              "disclosure",
+              "trust",
+              "integrity",
+              "term",
+              "honesty",
+              "long",
+              "silence",
+              "long term"
+            ],
+            [
+              "war",
+              "civilian",
+              "just",
+              "just war",
+              "proportionality",
+              "imminent",
+              "preemptive",
+              "strike"
+            ],
+            [
+              "boundaries",
+              "genuine",
+              "care",
+              "self",
+              "respect",
+              "sacrifice",
+              "friend",
+              "mutual"
+            ],
+            [
+              "irreversible",
+              "harms",
+              "reasoning",
+              "justice",
+              "moral",
+              "transition",
+              "delay",
+              "costs"
+            ],
+            [
+              "individual",
+              "autonomy",
+              "ethical",
+              "state",
+              "voluntary",
+              "social",
+              "education",
+              "parental"
+            ],
+            [
+              "patient",
+              "maleficence",
+              "non maleficence",
+              "beneficence",
+              "non",
+              "clinical",
+              "harm",
+              "safety"
+            ],
+            [
+              "fairness",
+              "performance",
+              "candidate",
+              "evidence",
+              "candidates",
+              "relevant",
+              "past",
+              "qualifications"
+            ],
+            [
+              "extraction",
+              "global",
+              "space",
+              "benefit",
+              "water",
+              "future",
+              "technological",
+              "benefit sharing"
+            ]
+          ]
+        },
+        "q_value_bh": 0.00552,
+        "p_value_holm": 0.012300000000000002
+      },
+      {
+        "model": "claude_opus",
+        "standardized_wording_beta": 0.25960173554622645,
+        "controls_only_r_squared": 0.004069512413425236,
+        "wording_full_r_squared": 0.06911602668317773,
+        "wording_incremental_r_squared": 0.0650465142697525,
+        "p_value": 0.0005,
+        "alternative": "two-sided",
+        "null_beta_mean": 0.0007259182062060198,
+        "null_beta_std": 0.07560493241884256,
+        "z_score": 3.4240599000324266,
+        "beta_ci_95_low": 0.10229710223469846,
+        "beta_ci_95_high": 0.40717607722276744,
+        "incremental_r2_ci_95_low": 0.010129122349826714,
+        "incremental_r2_ci_95_high": 0.1597059250915938,
+        "wording_vs_question_spearman_rho": 0.17366713637826686,
+        "fold_basis": {
+          "held_out_model": "claude_opus",
+          "training_documents": 465,
+          "vocabulary_size": 3531,
+          "reconstruction_error": 20.31663718738404,
+          "iterations": 125,
+          "component_top_terms": [
+            [
+              "boundaries",
+              "friend",
+              "genuine",
+              "mutual",
+              "gratitude",
+              "sacrifice",
+              "respect",
+              "self"
+            ],
+            [
+              "patient",
+              "maleficence",
+              "non maleficence",
+              "harm",
+              "non",
+              "beneficence",
+              "clinical",
+              "safety"
+            ],
+            [
+              "especially",
+              "strongest",
+              "central",
+              "time",
+              "matters",
+              "morally",
+              "use",
+              "does"
+            ],
+            [
+              "autonomy",
+              "individual",
+              "consent",
+              "voluntary",
+              "respect",
+              "choice",
+              "coercive",
+              "free"
+            ],
+            [
+              "term",
+              "disclosure",
+              "trust",
+              "long term",
+              "long",
+              "integrity",
+              "truth",
+              "short term"
+            ],
+            [
+              "intergenerational",
+              "present",
+              "generations",
+              "irreversible",
+              "costs",
+              "future generations",
+              "climate",
+              "justice"
+            ],
+            [
+              "war",
+              "civilian",
+              "imminent",
+              "diplomatic",
+              "proportionality",
+              "preemptive",
+              "threat",
+              "just"
+            ],
+            [
+              "equal",
+              "justice",
+              "opportunity",
+              "fairness",
+              "individual",
+              "privilege",
+              "ethical",
+              "tracking"
+            ],
+            [
+              "candidate",
+              "employer",
+              "relevant",
+              "fairness",
+              "job",
+              "performance",
+              "candidates",
+              "applicants"
+            ],
+            [
+              "being",
+              "well being",
+              "well",
+              "suffering",
+              "human",
+              "overall",
+              "life",
+              "net"
+            ]
+          ]
+        },
+        "q_value_bh": 0.0027,
+        "p_value_holm": 0.003
+      },
+      {
+        "model": "gemini_flash",
+        "standardized_wording_beta": 0.21917943855657426,
+        "controls_only_r_squared": 0.01412922749656409,
+        "wording_full_r_squared": 0.061005190891917804,
+        "wording_incremental_r_squared": 0.046875963395353715,
+        "p_value": 0.0072,
+        "alternative": "two-sided",
+        "null_beta_mean": 0.0007722216282920694,
+        "null_beta_std": 0.08127281962786531,
+        "z_score": 2.6873340672605233,
+        "beta_ci_95_low": 0.07299371360054396,
+        "beta_ci_95_high": 0.3681666908037965,
+        "incremental_r2_ci_95_low": 0.005204138223840641,
+        "incremental_r2_ci_95_high": 0.1306824533073696,
+        "wording_vs_question_spearman_rho": 0.16013905138449533,
+        "fold_basis": {
+          "held_out_model": "gemini_flash",
+          "training_documents": 465,
+          "vocabulary_size": 3757,
+          "reconstruction_error": 20.345488652237794,
+          "iterations": 936,
+          "component_top_terms": [
+            [
+              "autonomy",
+              "individual",
+              "collective",
+              "voluntary",
+              "legitimate",
+              "labor",
+              "benefits",
+              "education"
+            ],
+            [
+              "friend",
+              "sacrifice",
+              "boundaries",
+              "relationship",
+              "mutual",
+              "self",
+              "genuine",
+              "care"
+            ],
+            [
+              "especially",
+              "strongest",
+              "use",
+              "central",
+              "time",
+              "reason",
+              "morally",
+              "does"
+            ],
+            [
+              "war",
+              "civilian",
+              "imminent",
+              "threat",
+              "just",
+              "aggression",
+              "proportionality",
+              "just war"
+            ],
+            [
+              "fairness",
+              "relevant",
+              "evidence",
+              "performance",
+              "candidates",
+              "procedural",
+              "past",
+              "bias"
+            ],
+            [
+              "costs",
+              "present",
+              "irreversible",
+              "generations",
+              "intergenerational",
+              "climate",
+              "future generations",
+              "future"
+            ],
+            [
+              "public",
+              "victims",
+              "potential",
+              "potential victims",
+              "reputational",
+              "institutional",
+              "measures",
+              "ongoing"
+            ],
+            [
+              "harm",
+              "patient",
+              "safety",
+              "maleficence",
+              "non maleficence",
+              "non",
+              "beneficence",
+              "moral"
+            ],
+            [
+              "trust",
+              "integrity",
+              "honesty",
+              "term",
+              "deception",
+              "disclosure",
+              "employer",
+              "short"
+            ],
+            [
+              "decision",
+              "choice",
+              "capacity",
+              "person",
+              "memory",
+              "erasure",
+              "autonomous",
+              "informed"
+            ]
+          ]
+        },
+        "q_value_bh": 0.007200000000000001,
+        "p_value_holm": 0.012300000000000002
+      },
+      {
+        "model": "gpt_55",
+        "standardized_wording_beta": 0.2353334237861496,
+        "controls_only_r_squared": 0.019504561478206783,
+        "wording_full_r_squared": 0.0728681964574821,
+        "wording_incremental_r_squared": 0.05336363497927532,
+        "p_value": 0.0018,
+        "alternative": "two-sided",
+        "null_beta_mean": 1.3606278550654562e-05,
+        "null_beta_std": 0.07780719413227549,
+        "z_score": 3.0243966529309025,
+        "beta_ci_95_low": 0.06120477412788473,
+        "beta_ci_95_high": 0.39248314867562295,
+        "incremental_r2_ci_95_low": 0.003653006909324738,
+        "incremental_r2_ci_95_high": 0.14809574594685632,
+        "wording_vs_question_spearman_rho": 0.18188620840660177,
+        "fold_basis": {
+          "held_out_model": "gpt_55",
+          "training_documents": 465,
+          "vocabulary_size": 3506,
+          "reconstruction_error": 20.36084875295278,
+          "iterations": 175,
+          "component_top_terms": [
+            [
+              "autonomy",
+              "individual",
+              "voluntary",
+              "consent",
+              "choice",
+              "respect",
+              "state",
+              "conditions"
+            ],
+            [
+              "patient",
+              "clinical",
+              "maleficence",
+              "non maleficence",
+              "non",
+              "physician",
+              "beneficence",
+              "harm"
+            ],
+            [
+              "friend",
+              "genuine",
+              "boundaries",
+              "sacrifice",
+              "care",
+              "relationship",
+              "honesty",
+              "honest"
+            ],
+            [
+              "term",
+              "disclosure",
+              "long term",
+              "long",
+              "trust",
+              "integrity",
+              "short",
+              "short term"
+            ],
+            [
+              "justice",
+              "fairness",
+              "equal",
+              "ethical",
+              "institution",
+              "individual",
+              "moral",
+              "rigid"
+            ],
+            [
+              "costs",
+              "intergenerational",
+              "irreversible",
+              "harms",
+              "justice",
+              "present",
+              "climate",
+              "future"
+            ],
+            [
+              "war",
+              "civilian",
+              "just war",
+              "just",
+              "threat",
+              "diplomatic",
+              "preemptive",
+              "imminent"
+            ],
+            [
+              "potential",
+              "reputational",
+              "victims",
+              "potential victims",
+              "public",
+              "accused",
+              "report",
+              "interim"
+            ],
+            [
+              "candidate",
+              "performance",
+              "fairness",
+              "employer",
+              "relevant",
+              "bias",
+              "past",
+              "applicants"
+            ],
+            [
+              "being",
+              "well being",
+              "well",
+              "suffering",
+              "human",
+              "life",
+              "greatest",
+              "preservation"
+            ]
+          ]
+        },
+        "q_value_bh": 0.0036000000000000003,
+        "p_value_holm": 0.0072
+      },
+      {
+        "model": "grok",
+        "standardized_wording_beta": 0.23214577895424476,
+        "controls_only_r_squared": 0.010415150232632508,
+        "wording_full_r_squared": 0.06298803102507466,
+        "wording_incremental_r_squared": 0.052572880792442156,
+        "p_value": 0.0041,
+        "alternative": "two-sided",
+        "null_beta_mean": -0.00021393642310375276,
+        "null_beta_std": 0.08099189459994241,
+        "z_score": 2.8689255452670164,
+        "beta_ci_95_low": 0.06119570312003584,
+        "beta_ci_95_high": 0.38468696116947304,
+        "incremental_r2_ci_95_low": 0.003901481132273993,
+        "incremental_r2_ci_95_high": 0.14256328915721767,
+        "wording_vs_question_spearman_rho": 0.1629885443998422,
+        "fold_basis": {
+          "held_out_model": "grok",
+          "training_documents": 465,
+          "vocabulary_size": 3816,
+          "reconstruction_error": 20.32556485732792,
+          "iterations": 208,
+          "component_top_terms": [
+            [
+              "especially",
+              "strongest",
+              "time",
+              "central",
+              "use",
+              "reason",
+              "best",
+              "does"
+            ],
+            [
+              "being",
+              "well being",
+              "well",
+              "human",
+              "suffering",
+              "immediate",
+              "harm",
+              "life"
+            ],
+            [
+              "boundaries",
+              "sacrifice",
+              "friend",
+              "relationship",
+              "genuine",
+              "honesty",
+              "respect",
+              "self"
+            ],
+            [
+              "autonomy",
+              "individual",
+              "voluntary",
+              "labor",
+              "free",
+              "state",
+              "collective",
+              "individual autonomy"
+            ],
+            [
+              "trust",
+              "employer",
+              "integrity",
+              "candidate",
+              "honesty",
+              "job",
+              "informed",
+              "disclosure"
+            ],
+            [
+              "costs",
+              "harms",
+              "irreversible",
+              "justice",
+              "present",
+              "intergenerational",
+              "future",
+              "generations"
+            ],
+            [
+              "war",
+              "civilian",
+              "threat",
+              "imminent",
+              "just war",
+              "strike",
+              "just",
+              "preemptive"
+            ],
+            [
+              "patient",
+              "clinical",
+              "decision",
+              "physician",
+              "patients",
+              "maleficence",
+              "non maleficence",
+              "non"
+            ],
+            [
+              "fairness",
+              "equal",
+              "justice",
+              "opportunity",
+              "individual",
+              "ethical",
+              "institution",
+              "students"
+            ],
+            [
+              "public",
+              "report",
+              "potential",
+              "institutional",
+              "disclosure",
+              "reputational",
+              "victims",
+              "potential victims"
+            ]
+          ]
+        },
+        "q_value_bh": 0.00552,
+        "p_value_holm": 0.012300000000000002
+      },
+      {
+        "model": "deepseek",
+        "standardized_wording_beta": 0.2513475428059027,
+        "controls_only_r_squared": 0.01573517496827992,
+        "wording_full_r_squared": 0.07675208115689336,
+        "wording_incremental_r_squared": 0.06101690618861344,
+        "p_value": 0.0009,
+        "alternative": "two-sided",
+        "null_beta_mean": -7.612440316333764e-05,
+        "null_beta_std": 0.07688234394356075,
+        "z_score": 3.2702393594247843,
+        "beta_ci_95_low": 0.06228902267826519,
+        "beta_ci_95_high": 0.40844718042303524,
+        "incremental_r2_ci_95_low": 0.0038761079725981866,
+        "incremental_r2_ci_95_high": 0.16031502119906926,
+        "wording_vs_question_spearman_rho": 0.1839974889491241,
+        "fold_basis": {
+          "held_out_model": "deepseek",
+          "training_documents": 465,
+          "vocabulary_size": 3731,
+          "reconstruction_error": 20.33780956349001,
+          "iterations": 594,
+          "component_top_terms": [
+            [
+              "especially",
+              "central",
+              "strongest",
+              "time",
+              "use",
+              "public",
+              "does",
+              "reason"
+            ],
+            [
+              "being",
+              "well being",
+              "well",
+              "human",
+              "suffering",
+              "greatest",
+              "immediate",
+              "harm"
+            ],
+            [
+              "honesty",
+              "friend",
+              "boundaries",
+              "sacrifice",
+              "mutual",
+              "honest",
+              "relationships",
+              "respect"
+            ],
+            [
+              "disclosure",
+              "integrity",
+              "trust",
+              "term",
+              "silence",
+              "truth",
+              "professional",
+              "concealment"
+            ],
+            [
+              "equal",
+              "opportunity",
+              "institution",
+              "privilege",
+              "individual",
+              "fairness",
+              "tracking",
+              "ethical"
+            ],
+            [
+              "costs",
+              "irreversible",
+              "harms",
+              "present",
+              "justice",
+              "future",
+              "generations",
+              "climate"
+            ],
+            [
+              "war",
+              "civilian",
+              "just war",
+              "preemptive",
+              "diplomatic",
+              "just",
+              "threat",
+              "imminent"
+            ],
+            [
+              "patient",
+              "clinical",
+              "beneficence",
+              "decision",
+              "maleficence",
+              "non maleficence",
+              "harm",
+              "physician"
+            ],
+            [
+              "candidate",
+              "performance",
+              "fairness",
+              "candidates",
+              "relevant",
+              "past",
+              "applicants",
+              "procedural"
+            ],
+            [
+              "autonomy",
+              "labor",
+              "voluntary",
+              "individual",
+              "state",
+              "power",
+              "coercive",
+              "individual autonomy"
+            ]
+          ]
+        },
+        "q_value_bh": 0.0027,
+        "p_value_holm": 0.0045
+      }
+    ],
+    "mean_standardized_wording_beta": 0.23644242471688393,
+    "minimum_standardized_wording_beta": 0.21917943855657426,
+    "mean_controls_only_r_squared": 0.011991800769767488,
+    "mean_wording_full_r_squared": 0.06629207965725992,
+    "mean_wording_incremental_r_squared": 0.05430027888749243,
+    "holm_significant_models": 6,
+    "component_count_sensitivity": [
+      {
+        "components": 6,
+        "mean_standardized_wording_beta": 0.25525852477338423,
+        "minimum_standardized_wording_beta": 0.20711060486068736,
+        "mean_incremental_r_squared": 0.06386033115831762,
+        "minimum_incremental_r_squared": 0.041609714160054656
+      },
+      {
+        "components": 8,
+        "mean_standardized_wording_beta": 0.26059334286484864,
+        "minimum_standardized_wording_beta": 0.24037727441021392,
+        "mean_incremental_r_squared": 0.06575962938219747,
+        "minimum_incremental_r_squared": 0.05598339855414247
+      },
+      {
+        "components": 10,
+        "mean_standardized_wording_beta": 0.23644242471688393,
+        "minimum_standardized_wording_beta": 0.21917943855657426,
+        "mean_incremental_r_squared": 0.05430027888749243,
+        "minimum_incremental_r_squared": 0.046875963395353715
+      },
+      {
+        "components": 12,
+        "mean_standardized_wording_beta": 0.2294293154529541,
+        "minimum_standardized_wording_beta": 0.19715274676126424,
+        "mean_incremental_r_squared": 0.05176861247794593,
+        "minimum_incremental_r_squared": 0.03764111682882609
+      },
+      {
+        "components": 14,
+        "mean_standardized_wording_beta": 0.21929009230446428,
+        "minimum_standardized_wording_beta": 0.13070598901532862,
+        "mean_incremental_r_squared": 0.049302729529557686,
+        "minimum_incremental_r_squared": 0.01667673460245911
+      }
+    ],
+    "leave_one_source_out": [
+      {
+        "omitted_source": "Ask a Manager",
+        "remaining_pair_count": 768,
+        "mean_standardized_wording_beta": 0.20207212305511832,
+        "mean_incremental_r_squared": 0.03989600276595693
+      },
+      {
+        "omitted_source": "Case Studies - Ethics Unwrapped",
+        "remaining_pair_count": 748,
+        "mean_standardized_wording_beta": 0.20777240103579972,
+        "mean_incremental_r_squared": 0.042854677818122223
+      },
+      {
+        "omitted_source": "Cases, Rules, & Guidelines - Association for Practical and Professional Ethics",
+        "remaining_pair_count": 552,
+        "mean_standardized_wording_beta": 0.20969396236448104,
+        "mean_incremental_r_squared": 0.04248918156172129
+      },
+      {
+        "omitted_source": "Classroom Resources | Carnegie Council on Ethics in International Affairs",
+        "remaining_pair_count": 790,
+        "mean_standardized_wording_beta": 0.20116294502831597,
+        "mean_incremental_r_squared": 0.03973145189442401
+      },
+      {
+        "omitted_source": "Original",
+        "remaining_pair_count": 640,
+        "mean_standardized_wording_beta": 0.32122469289097594,
+        "mean_incremental_r_squared": 0.09984904451260851
+      },
+      {
+        "omitted_source": "The BMJ: Head to head",
+        "remaining_pair_count": 872,
+        "mean_standardized_wording_beta": 0.2823073333544097,
+        "mean_incremental_r_squared": 0.07781138629270394
+      },
+      {
+        "omitted_source": "The Ethicist - The New York Times",
+        "remaining_pair_count": 590,
+        "mean_standardized_wording_beta": 0.22427820535955456,
+        "mean_incremental_r_squared": 0.049293991230343726
+      }
+    ],
+    "recurring_fold_basis_terms": [
+      {
+        "term": "fairness",
+        "folds": 6,
+        "rank_score": 56
+      },
+      {
+        "term": "individual",
+        "folds": 6,
+        "rank_score": 56
+      },
+      {
+        "term": "war",
+        "folds": 6,
+        "rank_score": 48
+      },
+      {
+        "term": "autonomy",
+        "folds": 6,
+        "rank_score": 47
+      },
+      {
+        "term": "patient",
+        "folds": 6,
+        "rank_score": 47
+      },
+      {
+        "term": "boundaries",
+        "folds": 6,
+        "rank_score": 42
+      },
+      {
+        "term": "civilian",
+        "folds": 6,
+        "rank_score": 42
+      },
+      {
+        "term": "trust",
+        "folds": 6,
+        "rank_score": 39
+      },
+      {
+        "term": "disclosure",
+        "folds": 6,
+        "rank_score": 38
+      },
+      {
+        "term": "friend",
+        "folds": 6,
+        "rank_score": 38
+      },
+      {
+        "term": "irreversible",
+        "folds": 6,
+        "rank_score": 38
+      },
+      {
+        "term": "costs",
+        "folds": 6,
+        "rank_score": 37
+      },
+      {
+        "term": "integrity",
+        "folds": 6,
+        "rank_score": 32
+      },
+      {
+        "term": "maleficence",
+        "folds": 6,
+        "rank_score": 32
+      },
+      {
+        "term": "voluntary",
+        "folds": 6,
+        "rank_score": 32
+      },
+      {
+        "term": "sacrifice",
+        "folds": 6,
+        "rank_score": 30
+      },
+      {
+        "term": "non maleficence",
+        "folds": 6,
+        "rank_score": 26
+      },
+      {
+        "term": "imminent",
+        "folds": 6,
+        "rank_score": 22
+      },
+      {
+        "term": "harm",
+        "folds": 6,
+        "rank_score": 21
+      },
+      {
+        "term": "just",
+        "folds": 6,
+        "rank_score": 21
+      },
+      {
+        "term": "being",
+        "folds": 5,
+        "rank_score": 40
+      },
+      {
+        "term": "especially",
+        "folds": 5,
+        "rank_score": 40
+      },
+      {
+        "term": "justice",
+        "folds": 5,
+        "rank_score": 40
+      },
+      {
+        "term": "candidate",
+        "folds": 5,
+        "rank_score": 35
+      }
+    ],
+    "descriptive_topic_attribution": {
+      "basis_fit_scope": "all response texts; descriptive attribution only",
+      "vocabulary_size": 4247,
+      "reconstruction_error": 22.37872095961457,
+      "iterations": 759,
+      "mean_design_condition_number": 2.152539236630138,
+      "maximum_design_condition_number": 2.163834537708656,
+      "mean_controls_only_r_squared": 0.011991800769767488,
+      "mean_full_topic_equation_r_squared": 0.11886463228196159,
+      "mean_topic_equation_incremental_r_squared": 0.10687283151219411,
+      "held_out_models": [
+        {
+          "model": "claude_sonnet",
+          "controls_only_r_squared": 0.008097178029496388,
+          "full_topic_equation_r_squared": 0.12998207809732443,
+          "topic_equation_incremental_r_squared": 0.12188490006782804,
+          "topic_coefficients": [
+            0.02063646606363179,
+            0.21036515860539318,
+            0.1212422287339679,
+            -0.04714347487090172,
+            0.029583892903824214,
+            0.10736237979564281,
+            0.06921831258522126,
+            -0.06212895342688561,
+            0.08438640775564739,
+            0.18607880823152628
+          ]
+        },
+        {
+          "model": "claude_opus",
+          "controls_only_r_squared": 0.004069512413425236,
+          "full_topic_equation_r_squared": 0.09479231671557364,
+          "topic_equation_incremental_r_squared": 0.09072280430214841,
+          "topic_coefficients": [
+            0.01628307911729643,
+            0.2151403092407595,
+            0.05707703756683515,
+            -0.030589133262789704,
+            -0.02856218541009416,
+            0.14780177490667534,
+            0.06023924637087941,
+            0.027268323734865294,
+            0.10227667863203997,
+            0.06957768432847292
+          ]
+        },
+        {
+          "model": "gemini_flash",
+          "controls_only_r_squared": 0.01412922749656409,
+          "full_topic_equation_r_squared": 0.10663651217904924,
+          "topic_equation_incremental_r_squared": 0.09250728468248515,
+          "topic_coefficients": [
+            0.09215779797353181,
+            0.11522942804600474,
+            0.05252776131531152,
+            -0.06759216895064503,
+            0.046547458383215064,
+            0.13907995089820882,
+            0.08148696849743459,
+            -0.04711669418744726,
+            0.001896647722759934,
+            0.15588914208303364
+          ]
+        },
+        {
+          "model": "gpt_55",
+          "controls_only_r_squared": 0.019504561478206783,
+          "full_topic_equation_r_squared": 0.14100743708084995,
+          "topic_equation_incremental_r_squared": 0.12150287560264317,
+          "topic_coefficients": [
+            0.02816854852935673,
+            0.2091185165676681,
+            0.10872976153906021,
+            -0.10138121988739905,
+            -0.021854827791255953,
+            0.1498734738855962,
+            0.1156124130436878,
+            -0.007706138819773326,
+            0.020700203525717224,
+            0.12644370907203833
+          ]
+        },
+        {
+          "model": "grok",
+          "controls_only_r_squared": 0.010415150232632508,
+          "full_topic_equation_r_squared": 0.11617676779043351,
+          "topic_equation_incremental_r_squared": 0.105761617557801,
+          "topic_coefficients": [
+            0.02671177507099544,
+            0.14809920612706334,
+            0.05518180394541034,
+            -0.04951682573085505,
+            0.08640012404616829,
+            0.16490572131067274,
+            0.13999507481821533,
+            -0.07986582825527049,
+            0.09776971769965354,
+            0.10921920529218661
+          ]
+        },
+        {
+          "model": "deepseek",
+          "controls_only_r_squared": 0.01573517496827992,
+          "full_topic_equation_r_squared": 0.12459268182853878,
+          "topic_equation_incremental_r_squared": 0.10885750686025886,
+          "topic_coefficients": [
+            0.07306654989805147,
+            0.1416856141774718,
+            0.10923586560828502,
+            -0.02815203834136633,
+            -0.01623714776981776,
+            0.07194894412813496,
+            0.15299263550364015,
+            -0.036110872534739394,
+            0.10778662656690804,
+            0.1582416056090505
+          ]
+        }
+      ],
+      "topic_coefficients": [
+        {
+          "topic": 1,
+          "label": "especially · strongest · central",
+          "top_terms": [
+            "especially",
+            "strongest",
+            "central",
+            "time",
+            "public",
+            "matters",
+            "does",
+            "use",
+            "morally",
+            "best",
+            "reason",
+            "possible"
+          ],
+          "mean_standardized_beta": 0.04283736944214395,
+          "minimum_standardized_beta": 0.01628307911729643,
+          "maximum_standardized_beta": 0.09215779797353181,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.02063646606363179,
+            "claude_opus": 0.01628307911729643,
+            "gemini_flash": 0.09215779797353181,
+            "gpt_55": 0.02816854852935673,
+            "grok": 0.02671177507099544,
+            "deepseek": 0.07306654989805147
+          }
+        },
+        {
+          "topic": 2,
+          "label": "being · well being · well",
+          "top_terms": [
+            "being",
+            "well being",
+            "well",
+            "suffering",
+            "human",
+            "life",
+            "harm",
+            "immediate",
+            "preservation",
+            "greatest",
+            "overall",
+            "systemic"
+          ],
+          "mean_standardized_beta": 0.1732730387940601,
+          "minimum_standardized_beta": 0.11522942804600474,
+          "maximum_standardized_beta": 0.2151403092407595,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.21036515860539318,
+            "claude_opus": 0.2151403092407595,
+            "gemini_flash": 0.11522942804600474,
+            "gpt_55": 0.2091185165676681,
+            "grok": 0.14809920612706334,
+            "deepseek": 0.1416856141774718
+          }
+        },
+        {
+          "topic": 3,
+          "label": "friend · boundaries · sacrifice",
+          "top_terms": [
+            "friend",
+            "boundaries",
+            "sacrifice",
+            "genuine",
+            "honesty",
+            "mutual",
+            "respect",
+            "relationship",
+            "self",
+            "gratitude",
+            "care",
+            "honest"
+          ],
+          "mean_standardized_beta": 0.08399907645147836,
+          "minimum_standardized_beta": 0.05252776131531152,
+          "maximum_standardized_beta": 0.1212422287339679,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.1212422287339679,
+            "claude_opus": 0.05707703756683515,
+            "gemini_flash": 0.05252776131531152,
+            "gpt_55": 0.10872976153906021,
+            "grok": 0.05518180394541034,
+            "deepseek": 0.10923586560828502
+          }
+        },
+        {
+          "topic": 4,
+          "label": "war · civilian · just",
+          "top_terms": [
+            "war",
+            "civilian",
+            "just",
+            "just war",
+            "threat",
+            "imminent",
+            "diplomatic",
+            "preemptive",
+            "proportionality",
+            "aggression",
+            "escalation",
+            "refrain"
+          ],
+          "mean_standardized_beta": -0.05406247684065948,
+          "minimum_standardized_beta": -0.10138121988739905,
+          "maximum_standardized_beta": -0.02815203834136633,
+          "positive_models": 0,
+          "by_model": {
+            "claude_sonnet": -0.04714347487090172,
+            "claude_opus": -0.030589133262789704,
+            "gemini_flash": -0.06759216895064503,
+            "gpt_55": -0.10138121988739905,
+            "grok": -0.04951682573085505,
+            "deepseek": -0.02815203834136633
+          }
+        },
+        {
+          "topic": 5,
+          "label": "candidate · fairness · performance",
+          "top_terms": [
+            "candidate",
+            "fairness",
+            "performance",
+            "relevant",
+            "candidates",
+            "employer",
+            "past",
+            "job",
+            "applicants",
+            "evidence",
+            "role",
+            "procedural"
+          ],
+          "mean_standardized_beta": 0.015979552393673283,
+          "minimum_standardized_beta": -0.02856218541009416,
+          "maximum_standardized_beta": 0.08640012404616829,
+          "positive_models": 3,
+          "by_model": {
+            "claude_sonnet": 0.029583892903824214,
+            "claude_opus": -0.02856218541009416,
+            "gemini_flash": 0.046547458383215064,
+            "gpt_55": -0.021854827791255953,
+            "grok": 0.08640012404616829,
+            "deepseek": -0.01623714776981776
+          }
+        },
+        {
+          "topic": 6,
+          "label": "costs · irreversible · present",
+          "top_terms": [
+            "costs",
+            "irreversible",
+            "present",
+            "intergenerational",
+            "generations",
+            "climate",
+            "future",
+            "harms",
+            "justice",
+            "future generations",
+            "technological",
+            "expansion"
+          ],
+          "mean_standardized_beta": 0.1301620408208218,
+          "minimum_standardized_beta": 0.07194894412813496,
+          "maximum_standardized_beta": 0.16490572131067274,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.10736237979564281,
+            "claude_opus": 0.14780177490667534,
+            "gemini_flash": 0.13907995089820882,
+            "gpt_55": 0.1498734738855962,
+            "grok": 0.16490572131067274,
+            "deepseek": 0.07194894412813496
+          }
+        },
+        {
+          "topic": 7,
+          "label": "individual · autonomy · ethical",
+          "top_terms": [
+            "individual",
+            "autonomy",
+            "ethical",
+            "education",
+            "social",
+            "parental",
+            "equal",
+            "opportunity",
+            "legitimate",
+            "principle",
+            "privilege",
+            "collective"
+          ],
+          "mean_standardized_beta": 0.10325744180317975,
+          "minimum_standardized_beta": 0.06023924637087941,
+          "maximum_standardized_beta": 0.15299263550364015,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.06921831258522126,
+            "claude_opus": 0.06023924637087941,
+            "gemini_flash": 0.08148696849743459,
+            "gpt_55": 0.1156124130436878,
+            "grok": 0.13999507481821533,
+            "deepseek": 0.15299263550364015
+          }
+        },
+        {
+          "topic": 8,
+          "label": "patient · clinical · maleficence",
+          "top_terms": [
+            "patient",
+            "clinical",
+            "maleficence",
+            "non maleficence",
+            "non",
+            "beneficence",
+            "physician",
+            "harm",
+            "patients",
+            "diagnosis",
+            "medicine",
+            "risk"
+          ],
+          "mean_standardized_beta": -0.034276693914875124,
+          "minimum_standardized_beta": -0.07986582825527049,
+          "maximum_standardized_beta": 0.027268323734865294,
+          "positive_models": 1,
+          "by_model": {
+            "claude_sonnet": -0.06212895342688561,
+            "claude_opus": 0.027268323734865294,
+            "gemini_flash": -0.04711669418744726,
+            "gpt_55": -0.007706138819773326,
+            "grok": -0.07986582825527049,
+            "deepseek": -0.036110872534739394
+          }
+        },
+        {
+          "topic": 9,
+          "label": "choice · capacity · decision",
+          "top_terms": [
+            "choice",
+            "capacity",
+            "decision",
+            "person",
+            "consent",
+            "memory",
+            "conditions",
+            "autonomy",
+            "informed",
+            "erasure",
+            "autonomous",
+            "respect"
+          ],
+          "mean_standardized_beta": 0.06913604698378768,
+          "minimum_standardized_beta": 0.001896647722759934,
+          "maximum_standardized_beta": 0.10778662656690804,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.08438640775564739,
+            "claude_opus": 0.10227667863203997,
+            "gemini_flash": 0.001896647722759934,
+            "gpt_55": 0.020700203525717224,
+            "grok": 0.09776971769965354,
+            "deepseek": 0.10778662656690804
+          }
+        },
+        {
+          "topic": 10,
+          "label": "disclosure · trust · term",
+          "top_terms": [
+            "disclosure",
+            "trust",
+            "term",
+            "integrity",
+            "silence",
+            "truth",
+            "accountability",
+            "long",
+            "long term",
+            "short term",
+            "short",
+            "professional"
+          ],
+          "mean_standardized_beta": 0.13424169243605139,
+          "minimum_standardized_beta": 0.06957768432847292,
+          "maximum_standardized_beta": 0.18607880823152628,
+          "positive_models": 6,
+          "by_model": {
+            "claude_sonnet": 0.18607880823152628,
+            "claude_opus": 0.06957768432847292,
+            "gemini_flash": 0.15588914208303364,
+            "gpt_55": 0.12644370907203833,
+            "grok": 0.10921920529218661,
+            "deepseek": 0.1582416056090505
+          }
+        }
+      ]
+    },
+    "interpretation_warning": "The held-out model's response text is excluded from its primary NMF wording predictor, making the aggregate effect cross-model. The scenarios, response corpus, and embedding encoder remain shared, so this is fixed-panel interpretation rather than causal or unseen-scenario validation. The named topic coefficients use one all-response NMF basis in a separate, more flexible descriptive model. Its R-squared does not decompose the primary cross-fitted gain, and its topic coefficients receive no inferential p-values.",
+    "runtime_seconds": 25.58685016585514
   },
   "robustness_checks": {
     "method": "geometric sensitivity checks specified for this analysis",
@@ -6924,7 +8354,7 @@
     ],
     "all_checks_retain_half_primary_rho": true,
     "all_leave_one_source_out_effects_positive": true,
-    "runtime_seconds": 0.11819100007414818
+    "runtime_seconds": 0.11296816705726087
   },
   "projection_artifact_null": {
     "method": "independent within-topic re-pairing followed by re-projection",
@@ -7024,6 +8454,6 @@
     "question_similarity_cutoff": 0.24955412720042297,
     "pair_count": 992,
     "interpretation": "The null approximately preserves coarse question-topic block assignment and raw-answer marginals, and retains the shared projection operation, while destroying scenario-level alignment.",
-    "runtime_seconds": 24.66514683305286
+    "runtime_seconds": 23.39542887499556
   }
 }

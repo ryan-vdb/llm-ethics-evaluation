@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import { buildDashboardData } from "../scripts/sync-data.mjs";
+import { modelLabel } from "../src/charts.js";
 
 test("dashboard data preserves the canonical panel and headline results", async () => {
   const data = await buildDashboardData();
@@ -12,11 +13,19 @@ test("dashboard data preserves the canonical panel and headline results", async 
   assert.ok(data.panel.integrityQuestions > 0);
   assert.ok(data.panel.embeddingDimensions > 0);
   assert.equal(data.consistency.heldOutModels.length, data.panel.models.length);
+  assert.equal(data.consistency.mrqap.heldOutModels.length, data.panel.models.length);
+  assert.equal(data.consistency.mrqap.rawHeldOutModels.length, data.panel.models.length);
+  assert.equal(data.consistency.wordingRegression.heldOutModels.length, data.panel.models.length);
   assert.equal(data.integrity.conditions.length, data.panel.integrityConditions - 1);
   assert.equal(data.integrity.scenarioEffects.length, data.panel.integrityQuestions);
   assert.equal(data.integrity.modelEffects.length, data.panel.models.length);
   assert.ok(Number.isFinite(data.consistency.headline.meanHeldOutRho));
+  assert.ok(Number.isFinite(data.consistency.mrqap.headline.meanBeta));
+  assert.ok(Number.isFinite(data.consistency.mrqap.headline.meanIncrementalR2));
+  assert.ok(Number.isFinite(data.consistency.wordingRegression.headline.meanBeta));
+  assert.ok(Number.isFinite(data.consistency.wordingRegression.headline.incrementalR2));
   assert.ok(Number.isFinite(data.integrity.headline.extraRevision));
+  assert.equal(modelLabel("gpt_55"), "GPT-5.5");
 });
 
 test("claim-boundary diagnostics remain available to the frontend", async () => {
@@ -33,6 +42,53 @@ test("claim-boundary diagnostics remain available to the frontend", async () => 
     data.consistency.heldOutModels.every((row) => row.holm <= 0.05),
   );
   assert.ok(Number.isFinite(data.consistency.topicRemoval.strictResidualRho));
+  assert.ok(data.consistency.mrqap.definition.pairCount > 0);
+  assert.ok(data.consistency.mrqap.definition.questionSimilarityQuantile > 0);
+  assert.ok(data.consistency.mrqap.definition.questionSimilarityQuantile < 1);
+  assert.ok(data.consistency.mrqap.definition.topicCovariates.length > 0);
+  assert.deepEqual(
+    data.consistency.mrqap.heldOutModels.map((row) => row.model).sort(),
+    [...data.panel.models].sort(),
+  );
+  for (const row of data.consistency.mrqap.heldOutModels) {
+    assert.ok(row.betaLow <= row.beta && row.beta <= row.betaHigh);
+    assert.ok(row.incrementalLow <= row.incrementalR2 && row.incrementalR2 <= row.incrementalHigh);
+    assert.ok(Math.abs((row.fullR2 - row.topicOnlyR2) - row.incrementalR2) < 1e-10);
+  }
+  assert.deepEqual(
+    data.consistency.wordingRegression.heldOutModels.map((row) => row.model).sort(),
+    [...data.panel.models].sort(),
+  );
+  for (const row of data.consistency.wordingRegression.heldOutModels) {
+    assert.equal(row.alternative, "two-sided");
+    assert.ok(row.betaLow <= row.beta && row.beta <= row.betaHigh);
+    assert.ok(row.incrementalLow <= row.incrementalR2 && row.incrementalR2 <= row.incrementalHigh);
+    assert.ok(Math.abs((row.fullR2 - row.controlsOnlyR2) - row.incrementalR2) < 1e-10);
+    assert.ok(row.holm >= 0 && row.holm <= 1);
+  }
+  assert.equal(
+    data.consistency.wordingRegression.attribution.topics.length,
+    data.consistency.wordingRegression.definition.components,
+  );
+  assert.ok(data.consistency.wordingRegression.componentSensitivity.length >= 3);
+  assert.ok(data.consistency.wordingRegression.leaveOneSourceOut.length > 0);
+  if (data.consistency.clustering.selectedK !== null) {
+    const clustering = data.consistency.clustering;
+    assert.equal(clustering.profiles.length, clustering.selectedK);
+    assert.equal(clustering.metrics.k, clustering.selectedK);
+    assert.ok(Number.isFinite(clustering.metrics.question_embedding_silhouette));
+    assert.ok(Number.isFinite(clustering.metrics.minimum_split_half_ari));
+    assert.equal(
+      clustering.profiles.reduce((total, row) => total + row.size, 0),
+      data.panel.consistencyQuestions,
+    );
+    for (const row of clustering.profiles) {
+      assert.ok(row.exemplars.length > 0);
+      assert.ok(row.domains > 0);
+      assert.ok(row.sources > 0);
+      assert.ok(row.strictPairs >= 0);
+    }
+  }
 });
 
 test("the committed browser snapshot matches the canonical adapters", async () => {

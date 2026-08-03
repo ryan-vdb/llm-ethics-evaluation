@@ -3,7 +3,7 @@ const MODEL_LABELS = {
   claude_sonnet: "Claude Sonnet",
   deepseek: "DeepSeek",
   gemini_flash: "Gemini Flash",
-  gpt_55: "GPT · gpt_55",
+  gpt_55: "GPT-5.5",
   grok: "Grok",
 };
 
@@ -43,6 +43,25 @@ function scale(value, domainMin, domainMax, rangeMin, rangeMax) {
 
 function ticks(min, max, count = 5) {
   return Array.from({ length: count }, (_, index) => min + ((max - min) * index) / (count - 1));
+}
+
+function wrapLabel(value, maximumCharacters) {
+  const label = String(value);
+  if (!Number.isFinite(maximumCharacters) || label.length <= maximumCharacters) return [label];
+  const words = label.split(/\s+/);
+  const lines = [];
+  let line = "";
+  for (const word of words) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && candidate.length > maximumCharacters) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
 }
 
 function accessibleTable(label, headers, rows) {
@@ -97,6 +116,9 @@ export function forestPlot(rows, options = {}) {
   const height = top + bottom + rows.length * rowHeight;
   const min = options.min ?? 0.65;
   const max = options.max ?? 0.9;
+  const symbol = options.symbol || "ρ";
+  const statisticLabel = options.statisticLabel || "Partial Spearman rho";
+  const intervalLabel = options.intervalLabel || "node-bootstrap 95% CI";
   let body = axisMarkup({ min, max, left, right, top, bottom, width, height, digits: 2 });
   if (Number.isFinite(options.reference)) {
     const referenceX = scale(options.reference, min, max, left, width - right);
@@ -112,14 +134,14 @@ export function forestPlot(rows, options = {}) {
     body += `<line class="interval-line" x1="${low}" x2="${high}" y1="${y}" y2="${y}" />`;
     body += `<line class="interval-cap" x1="${low}" x2="${low}" y1="${y - 6}" y2="${y + 6}" />`;
     body += `<line class="interval-cap" x1="${high}" x2="${high}" y1="${y - 6}" y2="${y + 6}" />`;
-    body += `<circle class="chart-point" cx="${point}" cy="${y}" r="7"><title>${escapeHtml(modelLabel(row.model))}: ρ ${formatNumber(row.rho)}; node-bootstrap CI [${formatNumber(row.low)}, ${formatNumber(row.high)}]; Holm p ${formatNumber(row.holm, 4)}</title></circle>`;
+    body += `<circle class="chart-point" cx="${point}" cy="${y}" r="7"><title>${escapeHtml(modelLabel(row.model))}: ${escapeHtml(symbol)} ${formatNumber(row.rho)}; ${escapeHtml(intervalLabel)} [${formatNumber(row.low)}, ${formatNumber(row.high)}]; Holm p ${formatNumber(row.holm, 4)}</title></circle>`;
     body += `<text class="chart-value" x="${width - right + 10}" y="${y + 5}">${formatNumber(row.rho)}</text>`;
   });
   const label = options.label || "Held-out model correlations with node-bootstrap intervals";
   return chartFrame({
     body, width, height, label, className: "forest-chart",
-    headers: ["Model", "Partial Spearman rho", "95% CI low", "95% CI high", "Holm p"],
-    rows: rows.map((row) => [modelLabel(row.model), formatNumber(row.rho), formatNumber(row.low), formatNumber(row.high), formatNumber(row.holm, 4)]),
+    headers: options.tableHeaders || ["Model", statisticLabel, "95% CI low", "95% CI high", "Holm p"],
+    rows: options.tableRows || rows.map((row) => [modelLabel(row.model), formatNumber(row.rho), formatNumber(row.low), formatNumber(row.high), formatNumber(row.holm, 4)]),
   });
 }
 
@@ -149,6 +171,66 @@ export function pairedDotPlot(rows, options = {}) {
     body, width, height, label,
     headers: ["Model", "Raw answer geometry", "Question-projected residual geometry"],
     rows: rows.map((row) => [modelLabel(row.label), formatNumber(row.before), formatNumber(row.after)]),
+  });
+}
+
+export function rSquaredComparisonPlot(rows, options = {}) {
+  const width = 820;
+  const rowHeight = 58;
+  const top = 50;
+  const bottom = 44;
+  const left = 174;
+  const right = 92;
+  const min = 0;
+  const max = options.max ?? 0.8;
+  const baselineLegend = options.baselineLegend || "measured question/source covariates";
+  const addedLegend = options.addedLegend || "+ other-model consensus";
+  const baselineTooltip = options.baselineTooltip || "controls-only";
+  const fullTooltip = options.fullTooltip || "controls + consensus";
+  const betaHeader = options.betaHeader || "Standardized β";
+  const average = (key) => rows.reduce((total, row) => total + row[key], 0) / rows.length;
+  const displayRows = [
+    {
+      label: "Mean",
+      topicOnlyR2: average("topicOnlyR2"),
+      fullR2: average("fullR2"),
+      incrementalR2: average("incrementalR2"),
+      highlight: true,
+    },
+    ...rows.map((row) => ({ ...row, label: modelLabel(row.model) })),
+  ];
+  const height = top + bottom + displayRows.length * rowHeight;
+  let body = axisMarkup({ min, max, left, right, top, bottom, width, height, digits: 2 });
+  body += `<g class="chart-legend r2-legend"><circle class="r2-topic-point" cx="${left}" cy="18" r="5"/><text x="${left + 11}" y="22">${escapeHtml(baselineLegend)}</text><circle class="r2-full-point" cx="${left + 250}" cy="18" r="6"/><text x="${left + 262}" y="22">${escapeHtml(addedLegend)}</text></g>`;
+  displayRows.forEach((row, index) => {
+    const y = top + rowHeight * index + rowHeight / 2;
+    const topicX = scale(row.topicOnlyR2, min, max, left, width - right);
+    const fullX = scale(row.fullR2, min, max, left, width - right);
+    if (row.highlight) body += `<rect class="r2-mean-band" x="${left - 162}" y="${y - 24}" width="${width - right - left + 244}" height="48" rx="9"/>`;
+    body += `<text class="chart-label${row.highlight ? " strong" : ""}" x="${left - 14}" y="${y + 5}" text-anchor="end">${escapeHtml(row.label)}</text>`;
+    body += `<line class="r2-gain-line${row.highlight ? " highlight" : ""}" x1="${topicX}" x2="${fullX}" y1="${y}" y2="${y}" />`;
+    body += `<circle class="r2-topic-point" cx="${topicX}" cy="${y}" r="6"><title>${escapeHtml(row.label)} ${escapeHtml(baselineTooltip)} R²: ${formatNumber(row.topicOnlyR2)}</title></circle>`;
+    body += `<circle class="r2-full-point" cx="${fullX}" cy="${y}" r="7"><title>${escapeHtml(row.label)} ${escapeHtml(fullTooltip)} R²: ${formatNumber(row.fullR2)}; ΔR² ${formatNumber(row.incrementalR2)}${Number.isFinite(row.incrementalLow) ? `; ΔR² node-bootstrap CI [${formatNumber(row.incrementalLow)}, ${formatNumber(row.incrementalHigh)}]` : ""}</title></circle>`;
+    body += `<text class="r2-end-value" x="${topicX}" y="${y - 12}" text-anchor="middle">${formatNumber(row.topicOnlyR2)}</text>`;
+    body += `<text class="r2-end-value full" x="${fullX}" y="${y - 12}" text-anchor="middle">${formatNumber(row.fullR2)}</text>`;
+    body += `<text class="chart-value" x="${width - right + 12}" y="${y + 5}">Δ ${formatNumber(row.incrementalR2)}</text>`;
+  });
+  const label = options.label || "Controls-only versus controls-plus-consensus R-squared by held-out model";
+  return chartFrame({
+    body, width, height, label, className: "r2-comparison-chart",
+    headers: ["Model", `${baselineLegend} R²`, `${addedLegend} R²`, "Incremental R²", "ΔR² CI low", "ΔR² CI high", betaHeader, "β CI low", "β CI high", "Exploratory Holm p (β)"],
+    rows: displayRows.map((row) => [
+      row.label,
+      formatNumber(row.topicOnlyR2),
+      formatNumber(row.fullR2),
+      formatNumber(row.incrementalR2),
+      row.highlight ? "—" : formatNumber(row.incrementalLow),
+      row.highlight ? "—" : formatNumber(row.incrementalHigh),
+      row.highlight ? formatNumber(average("beta")) : formatNumber(row.beta),
+      row.highlight ? "—" : formatNumber(row.betaLow),
+      row.highlight ? "—" : formatNumber(row.betaHigh),
+      row.highlight ? "—" : formatNumber(row.holm, 4),
+    ]),
   });
 }
 
@@ -225,7 +307,9 @@ export function horizontalBarPlot(rows, options = {}) {
   rows.forEach((row, index) => {
     const y = top + rowHeight * index + rowHeight / 2;
     const valueX = scale(row.value, min, max, left, width - right);
-    body += `<text class="chart-label" x="${left - 14}" y="${y + 5}" text-anchor="end">${escapeHtml(row.label)}</text>`;
+    const labelLines = wrapLabel(row.label, options.wrapLabelsAt);
+    const firstLineY = y + 5 - ((labelLines.length - 1) * 7);
+    body += `<text class="chart-label" x="${left - 14}" y="${firstLineY}" text-anchor="end">${labelLines.map((line, lineIndex) => `<tspan x="${left - 14}" dy="${lineIndex === 0 ? 0 : 14}">${escapeHtml(line)}</tspan>`).join("")}</text>`;
     body += `<rect class="horizontal-bar${row.highlight ? " highlight" : ""}" x="${left}" y="${y - 9}" width="${Math.max(2, valueX - left)}" height="18" rx="4"><title>${escapeHtml(row.tooltip || `${row.label}: ${formatNumber(row.value)}`)}</title></rect>`;
     body += `<text class="chart-value" x="${valueX + 9}" y="${y + 5}">${options.percent ? formatPercent(row.value) : formatNumber(row.value, options.digits ?? 3)}</text>`;
   });

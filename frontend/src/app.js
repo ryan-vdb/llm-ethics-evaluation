@@ -10,6 +10,7 @@ import {
   horizontalBarPlot,
   modelLabel,
   pairedDotPlot,
+  rSquaredComparisonPlot,
 } from "./charts.js";
 
 const app = document.querySelector("#app");
@@ -121,6 +122,37 @@ function renderConsistency(data) {
   }));
   const robustness = c.robustness.map((row) => ({ label: row.check, value: row.mean }));
   const weakestRobustness = c.robustness.reduce((lowest, row) => row.mean < lowest.mean ? row : lowest);
+  const mrqapBetaValues = c.mrqap.heldOutModels.map((row) => row.beta);
+  const meanMrqapTopicR2 = c.mrqap.heldOutModels.reduce((total, row) => total + row.topicOnlyR2, 0) / c.mrqap.heldOutModels.length;
+  const meanMrqapFullR2 = c.mrqap.heldOutModels.reduce((total, row) => total + row.fullR2, 0) / c.mrqap.heldOutModels.length;
+  const mrqapSourceBetas = c.mrqap.leaveOneSourceOut.map((row) => row.meanBeta);
+  const mrqapSignificantCount = c.mrqap.heldOutModels.filter((row) => row.holm <= 0.05).length;
+  const maximumMrqapHolm = Math.max(...c.mrqap.heldOutModels.map((row) => row.holm));
+  const mrqapDomainMask = c.mrqap.definition.differentExactDomain ? "different exact domains" : "all domain pairings";
+  const mrqapSourceMask = c.mrqap.definition.differentSource ? "Different sources are required." : "Same-source status is modeled, not excluded.";
+  const wording = c.wordingRegression;
+  const wordingPlotRows = wording.heldOutModels.map((row) => ({
+    model: row.model,
+    topicOnlyR2: row.controlsOnlyR2,
+    fullR2: row.fullR2,
+    incrementalR2: row.incrementalR2,
+    incrementalLow: row.incrementalLow,
+    incrementalHigh: row.incrementalHigh,
+    beta: row.beta,
+    betaLow: row.betaLow,
+    betaHigh: row.betaHigh,
+    holm: row.holm,
+  }));
+  const wordingComponentDeltas = wording.componentSensitivity.map((row) => row.meanIncrementalR2);
+  const wordingSourceBetas = wording.leaveOneSourceOut.map((row) => row.meanBeta);
+  const wordingTopicRows = wording.attribution.topics.map((topic) => ({
+    label: `T${topic.topic} · ${topic.terms.slice(0, 2).join(" / ")}`,
+    value: topic.beta,
+    highlight: topic.beta >= 0.1 && topic.positiveModels === data.panel.models.length,
+    tooltip: `Topic ${topic.topic}: mean β ${formatSigned(topic.beta)}; range ${formatSigned(topic.minimumBeta)} to ${formatSigned(topic.maximumBeta)}; positive in ${topic.positiveModels}/${data.panel.models.length} held-out models`,
+  }));
+  const strongestWordingTopics = [...wording.attribution.topics].sort((a, b) => b.beta - a.beta).slice(0, 3);
+  const mostNegativeWordingTopic = [...wording.attribution.topics].sort((a, b) => a.beta - b.beta)[0];
   const pairCards = c.stablePairs.map((pair) => `
     <details class="pair-card">
       <summary>
@@ -152,10 +184,46 @@ function renderConsistency(data) {
     </details>`).join("");
   const topics = c.topics.map((topic) => `
     <article class="topic-card"><span>Topic ${topic.topic}</span><h4>${topic.terms.slice(0, 3).map(escapeHtml).join(" · ")}</h4><div class="term-cloud">${topic.terms.map((term) => `<i>${escapeHtml(term)}</i>`).join("")}</div><p>Cross-model profile ρ <strong>${formatNumber(topic.profileRho)}</strong></p></article>`).join("");
-  const clusteringDetails = c.clustering.selectedK === null || c.clustering.metrics === null
-    ? `<p>No stable partition was selected in this snapshot (<code>${escapeHtml(c.clustering.status)}</code>). That is evidence against treating the geometry as a small set of discrete frameworks.</p>`
-    : `<p>K-Means found a candidate k=${c.clustering.selectedK} partition, but the silhouette is ${formatNumber(c.clustering.metrics.consensus_silhouette_in_sample)} and K-Means versus agglomerative ARI is ${formatNumber(c.clustering.metrics.agglomerative_vs_kmeans_ari)}. This can be a cut through a continuous manifold—not ${c.clustering.selectedK} ethical frameworks.</p>
-       <div class="cluster-grid">${c.clustering.profiles.map((row) => `<div><span>Cluster ${row.cluster}</span><strong>${row.size} scenarios</strong><p>${row.terms.map(escapeHtml).join(" · ")}</p><small>${row.strictPairs} strict within-cluster cross-topic pairs</small></div>`).join("")}</div>`;
+  const clusterTotal = c.clustering.profiles.reduce((total, row) => total + row.size, 0);
+  const clusterProfileCards = c.clustering.profiles.map((row) => {
+    const exemplar = row.exemplars[0];
+    return `<article class="cluster-profile-card">
+      <header><span>Candidate group ${row.cluster}</span><strong>${row.size} of ${clusterTotal} scenarios</strong></header>
+      <div class="cluster-share" aria-label="${formatPercent(row.size / clusterTotal)} of scenarios"><i style="--value:${row.size / clusterTotal}"></i></div>
+      <p class="cluster-term-label">Researcher-annotation terms appearing more often here</p>
+      <h4>${row.terms.slice(0, 4).map(escapeHtml).join(" · ")}</h4>
+      <div class="cluster-facts"><span>${row.domains} domains</span><span>${row.sources} sources</span><span>${row.strictPairs} strict cross-topic pairs</span></div>
+      ${exemplar ? `<div class="cluster-medoid"><span>Representative scenario · Q${exemplar.id} · ${escapeHtml(exemplar.domain)}</span><strong>${escapeHtml(exemplar.conflict)}</strong><details><summary>Read scenario</summary><p>${escapeHtml(exemplar.question)}</p></details></div>` : ""}
+      ${row.strictPairs < 30 ? `<p class="cluster-coverage-note">This group has limited strict within-group cross-topic coverage, so its topic-independent interpretation remains tentative.</p>` : ""}
+    </article>`;
+  }).join("");
+  const orderedClusters = [...c.clustering.profiles].sort((a, b) => b.size - a.size);
+  const clusterMeaning = orderedClusters.length === 2
+    ? `The larger profile is marked by ${orderedClusters[0].terms.slice(0, 3).join(", ")}; the smaller profile by ${orderedClusters[1].terms.slice(0, 3).join(", ")}.`
+    : "The profiles expose recurring regions of the response geometry through their representative scenarios and annotated conflict terms.";
+  const clusteringPanel = c.clustering.selectedK === null || c.clustering.metrics === null
+    ? `<article class="panel clustering-panel reveal"><header><div><span class="panel-kicker">Exploratory clustering result</span><h3>No candidate partition met the declared stability rule</h3></div><span class="method-chip">K-Means</span></header><p>${escapeHtml(c.clustering.status)}</p></article>`
+    : `<article class="panel clustering-panel reveal">
+        <header><div><span class="panel-kicker">Exploratory clustering result</span><h3>A candidate ${c.clustering.selectedK}-group organization recurs across model views</h3></div><span class="method-chip">K-Means</span></header>
+        <p class="clustering-lede">K-Means selected groups of ${c.clustering.metrics.cluster_sizes.join(" and ")} scenarios. ${escapeHtml(clusterMeaning)} Moderate cross-model and split-half agreement means this cut reappears across model views, while the separation remains soft rather than absolute.</p>
+        <div class="clustering-diagnostics" aria-label="Clustering diagnostics">
+          <div><span>Group sizes</span><strong>${c.clustering.metrics.cluster_sizes.join(" / ")}</strong></div>
+          <div><span>Held-out partition ARI</span><strong>${formatNumber(c.clustering.metrics.mean_held_out_view_partition_ari)}</strong></div>
+          <div><span>Mean split-half ARI</span><strong>${formatNumber(c.clustering.metrics.mean_split_half_ari)}</strong></div>
+          <div><span>Minimum split-half ARI</span><strong>${formatNumber(c.clustering.metrics.minimum_split_half_ari)}</strong></div>
+          <div><span>Response silhouette</span><strong>${formatNumber(c.clustering.metrics.consensus_silhouette_in_sample)}</strong></div>
+          <div><span>Question-only silhouette</span><strong>${formatNumber(c.clustering.metrics.question_embedding_silhouette)}</strong></div>
+          <div><span>Cross-topic contrast</span><strong>+${formatNumber(c.clustering.metrics.mean_strict_cross_topic_similarity_contrast)}</strong></div>
+          <div><span>Domain / source AMI</span><strong>${formatNumber(c.clustering.metrics.domain_adjusted_mutual_information)} / ${formatNumber(c.clustering.metrics.source_adjusted_mutual_information)}</strong></div>
+          <div><span>Alternative-algorithm ARI</span><strong>${formatNumber(c.clustering.metrics.agglomerative_vs_kmeans_ari)}</strong></div>
+        </div>
+        <div class="cluster-profile-grid">${clusterProfileCards}</div>
+        <div class="clustering-reading">
+          <div><span>What is meaningful here</span><p>The candidate split supplies an inspectable map of recurring response-geometry regions: group sizes, representative scenarios, and profile differences can now be compared directly. Held-out and mean split-half ARI of ${formatNumber(c.clustering.metrics.mean_held_out_view_partition_ari, 2)} and ${formatNumber(c.clustering.metrics.mean_split_half_ari, 2)} show that the same broad cut often reappears when model views change.</p></div>
+          <div><span>How to interpret it</span><p>Response silhouette ${formatNumber(c.clustering.metrics.consensus_silhouette_in_sample)} is nearly identical to question-only silhouette ${formatNumber(c.clustering.metrics.question_embedding_silhouette)}, and one split-half ARI falls to ${formatNumber(c.clustering.metrics.minimum_split_half_ari)}. Together with low alternative-algorithm agreement, this indicates overlapping, non-unique boundaries and limits the topic-independent claim. The result is a useful candidate organization of this corpus, not exactly ${c.clustering.selectedK} fixed ethical theories.</p></div>
+        </div>
+        <p class="cluster-annotation-note">Profile terms come from researcher-authored conflict annotations and describe the selected groups after clustering; they were not labels discovered directly from answer embeddings.</p>
+      </article>`;
 
   return `
     <section class="study-section consistency-section" id="consistency">
@@ -175,10 +243,10 @@ function renderConsistency(data) {
           </article>
           <aside class="panel explanation-panel">
             <span class="panel-kicker">How to read this</span>
-            <h3>Train on five.<br/>Test on the sixth.</h3>
+            <h3>Train on ${data.panel.models.length - 1}.<br/>Test on the held-out model.</h3>
             <ol class="numbered-list">
-              <li><b>01</b><span>Average five models' orthogonalized answer geometry.</span></li>
-              <li><b>02</b><span>Hide the sixth model entirely.</span></li>
+              <li><b>01</b><span>Average ${data.panel.models.length - 1} models' orthogonalized answer geometry.</span></li>
+              <li><b>02</b><span>Hide the remaining model entirely.</span></li>
               <li><b>03</b><span>Ask whether its cross-topic pair rankings agree.</span></li>
             </ol>
             <div class="mini-stat"><span>Split-half agreement</span><strong>ρ ${formatNumber(c.headline.splitHalfRho)}</strong></div>
@@ -206,9 +274,34 @@ function renderConsistency(data) {
           <div><span>Training-defined axis recovery</span><strong>${formatNumber(c.axisValidation.mean_rho)}</strong><i>${c.axisValidation.tests_significant_fdr_05}/${c.axisValidation.tests} FDR-significant</i></div>
         </div>
 
-        <article class="panel chart-panel reveal">
+        <article class="panel mrqap-panel reveal">
+          <header><div><span class="panel-kicker">Regression sensitivity · secondary</span><h3>Adding cross-model consensus increases fit for each held-out model</h3></div><span class="method-chip">MRQAP</span></header>
+          <p class="mrqap-lede">Across ${c.mrqap.heldOutModels.length} leave-one-model-out regressions, mean R² rose from <strong>${formatNumber(meanMrqapTopicR2)}</strong> with measured question/topic and source covariates alone to <strong>${formatNumber(meanMrqapFullR2)}</strong> after adding the other models' residual consensus—a mean increase of <strong>ΔR² ${formatNumber(c.mrqap.headline.meanIncrementalR2)}</strong>. The mean standardized consensus coefficient was <strong>β = ${formatNumber(c.mrqap.headline.meanBeta)}</strong> (range ${formatNumber(Math.min(...mrqapBetaValues))}–${formatNumber(Math.max(...mrqapBetaValues))}).</p>
+          <div class="mrqap-layout">
+            <div class="mrqap-chart">
+              ${rSquaredComparisonPlot(c.mrqap.heldOutModels, {
+                label: "Measured question and source covariates alone versus adding cross-model consensus R-squared by held-out model",
+              })}
+            </div>
+            <aside class="mrqap-summary" aria-label="MRQAP summary">
+              <div class="mrqap-stat"><span>Mean fitted R²</span><strong>${formatNumber(meanMrqapTopicR2)} → ${formatNumber(meanMrqapFullR2)}</strong><small>controls alone → + consensus</small></div>
+              <div class="mrqap-stat"><span>Mean incremental R²</span><strong>${formatNumber(c.mrqap.headline.meanIncrementalR2)}</strong><small>added dyadic model fit</small></div>
+              <div class="mrqap-stat"><span>Mean standardized β</span><strong>${formatNumber(c.mrqap.headline.meanBeta)}</strong><small>other-model consensus</small></div>
+              <div class="mrqap-stat"><span>Masked pairs</span><strong>${c.mrqap.definition.pairCount.toLocaleString()}</strong><small>dependent dyads—not IID</small></div>
+              <div class="mrqap-controls"><span>Measured controls</span><p>${c.mrqap.definition.topicCovariates.map(escapeHtml).join(" · ")}</p></div>
+              <p class="mrqap-mask">${escapeHtml(mrqapDomainMask)} and the lowest ${formatPercent(c.mrqap.definition.questionSimilarityQuantile, 0)} of question-similarity pairs (cosine ≤ ${formatNumber(c.mrqap.definition.questionSimilarityCutoff, 3)}). ${escapeHtml(mrqapSourceMask)}</p>
+              <p class="mrqap-source">Leave-one-source-out mean β: ${formatNumber(Math.min(...mrqapSourceBetas))}–${formatNumber(Math.max(...mrqapSourceBetas))}.</p>
+            </aside>
+          </div>
+          <footer class="mrqap-caveat">
+            <p>Each row holds out one model and predicts its residual answer-similarity network from the other-model consensus. Both points are nested, in-sample fits on the same dyadic mask; question-node resampling supplies the displayed ΔR² intervals.</p>
+            <p>Secondary sensitivity using the same responses and embeddings as the primary RSA—not an independent replication or a causal estimate. Nuisance-residual QAP p-values test the consensus coefficient, not ΔR²; ${mrqapSignificantCount}/${c.mrqap.heldOutModels.length} tests are Holm-significant (largest adjusted p ${formatNumber(maximumMrqapHolm, 4)}).</p>
+          </footer>
+        </article>
+
+        <article class="panel chart-panel preprocessing-panel reveal">
           <header><div><span class="panel-kicker">Preprocessing sensitivity</span><h3>The result survives harder removals</h3></div><span class="method-chip">mean held-out ρ</span></header>
-          ${horizontalBarPlot(robustness, { min: 0, max: 0.9, left: 270 })}
+          ${horizontalBarPlot(robustness, { min: 0, max: 0.9, left: 270, rowHeight: 58, wrapLabelsAt: 32 })}
           <p class="panel-note">Across ${c.robustness.length} listed sensitivity checks, the lowest mean held-out estimate is ${formatNumber(weakestRobustness.mean)} (${formatPercent(weakestRobustness.relative)} of the primary estimate).</p>
         </article>
 
@@ -217,15 +310,58 @@ function renderConsistency(data) {
         <div class="topic-grid reveal">${topics}</div>
         <p class="interpretive-note reveal">Answer-only NMF language profiles align with residual geometry at partial ρ <strong>${formatNumber(c.topicAlignment.partialRho)}</strong>. The basis uses the same response corpus, so it is an interpretation aid rather than independent validation.</p>
 
+        <article class="panel wording-regression-panel reveal">
+          <header><div><span class="panel-kicker">Interpretability regression · secondary</span><h3>Cross-model wording explains a modest, consistent slice of held-out geometry</h3></div><span class="method-chip">NMF + QAP</span></header>
+          <p class="wording-lede">For each model, the NMF basis and wording profiles are learned from the other ${data.panel.models.length - 1} models only. On ${wording.definition.pairCount.toLocaleString()} strict cross-topic pairs, mean R² rises from <strong>${formatNumber(wording.headline.controlsOnlyR2)}</strong> with question controls to <strong>${formatNumber(wording.headline.fullR2)}</strong> after adding wording similarity (mean <strong>ΔR² ${formatNumber(wording.headline.incrementalR2)}</strong>; standardized <strong>β ${formatNumber(wording.headline.meanBeta)}</strong>).</p>
+          <div class="wording-equation"><span>Fitted equation</span><code>${escapeHtml(wording.equation)}</code></div>
+          <div class="mrqap-layout wording-r2-layout">
+            <div class="mrqap-chart">
+              ${rSquaredComparisonPlot(wordingPlotRows, {
+                max: 0.12,
+                baselineLegend: "question controls alone",
+                addedLegend: "+ cross-model NMF wording",
+                baselineTooltip: "question-controls-only",
+                fullTooltip: "controls + NMF wording",
+                betaHeader: "Standardized wording β",
+                label: "Question controls alone versus adding cross-model NMF wording R-squared by held-out model",
+              })}
+            </div>
+            <aside class="mrqap-summary" aria-label="NMF wording regression summary">
+              <div class="mrqap-stat"><span>Mean fitted R²</span><strong>${formatNumber(wording.headline.controlsOnlyR2)} → ${formatNumber(wording.headline.fullR2)}</strong><small>question controls → + wording</small></div>
+              <div class="mrqap-stat"><span>Mean incremental R²</span><strong>${formatNumber(wording.headline.incrementalR2)}</strong><small>held-out geometric fit</small></div>
+              <div class="mrqap-stat"><span>Mean wording β</span><strong>${formatNumber(wording.headline.meanBeta)}</strong><small>positive in ${wording.heldOutModels.filter((row) => row.beta > 0).length}/${wording.heldOutModels.length} models</small></div>
+              <div class="mrqap-stat"><span>Holm-significant</span><strong>${wording.headline.holmSignificantModels}/${wording.heldOutModels.length}</strong><small>exploratory two-sided QAP</small></div>
+              <div class="mrqap-controls"><span>Question controls</span><p>${wording.definition.controls.map(escapeHtml).join(" · ")}</p></div>
+              <p class="mrqap-mask">Different domains and sources; lowest ${formatPercent(wording.definition.questionSimilarityQuantile, 0)} of question similarity (cosine ≤ ${formatNumber(wording.definition.questionSimilarityCutoff, 3)}).</p>
+            </aside>
+          </div>
+          <footer class="mrqap-caveat">
+            <p>Component-count sensitivity keeps mean ΔR² between ${formatNumber(Math.min(...wordingComponentDeltas))} and ${formatNumber(Math.max(...wordingComponentDeltas))}; leave-one-source-out mean β ranges ${formatNumber(Math.min(...wordingSourceBetas))}–${formatNumber(Math.max(...wordingSourceBetas))}.</p>
+            <p>The held-out model's text is excluded from its predictor, but the scenario set and encoder are shared. This is fixed-panel interpretation—not causal evidence or validation on unseen scenarios.</p>
+          </footer>
+        </article>
+
+        <div class="content-grid wording-attribution-grid reveal">
+          <article class="panel chart-panel">
+            <header><div><span class="panel-kicker">Human-readable coefficient layer</span><h3>Which topic co-activations associate with the geometry?</h3></div><span class="method-chip">descriptive β</span></header>
+            ${divergingBarPlot(wordingTopicRows, { min: -0.12, max: 0.20, left: 270, rowHeight: 48, digits: 3, label: "Descriptive standardized NMF topic co-activation coefficients" })}
+            <footer class="chart-caption"><span>Positive β: pairs sharing that wording profile sit closer in residual geometry</span><span>No topic-level inferential p-values</span></footer>
+          </article>
+          <aside class="panel wording-explanation-panel">
+            <span class="panel-kicker">How to interpret it</span>
+            <h3>Words become named coordinates—not proof of a moral theory.</h3>
+            <p>The joint ten-topic equation adds <strong>ΔR² ${formatNumber(wording.attribution.incrementalR2)}</strong> beyond question controls. Its design condition number is ${formatNumber(wording.attribution.meanConditionNumber, 2)}, so the displayed coefficients are not being driven by severe numerical collinearity.</p>
+            <div class="wording-topic-list"><span>Strongest positive profiles</span>${strongestWordingTopics.map((topic) => `<p><b>β ${formatSigned(topic.beta)}</b><span>T${topic.topic} · ${topic.terms.slice(0, 3).map(escapeHtml).join(" · ")}</span></p>`).join("")}</div>
+            <div class="wording-topic-list"><span>Most negative profile</span><p><b>β ${formatSigned(mostNegativeWordingTopic.beta)}</b><span>T${mostNegativeWordingTopic.topic} · ${mostNegativeWordingTopic.terms.slice(0, 3).map(escapeHtml).join(" · ")}</span></p></div>
+            <div class="recurring-terms"><span>Terms recurring across training-only fold bases</span><div>${wording.recurringTerms.slice(0, 12).map((row) => `<i>${escapeHtml(row.term)} · ${row.folds}/${data.panel.models.length}</i>`).join("")}</div></div>
+            <p class="wording-caveat">This is a separate, more flexible post-hoc model fit with a common all-response basis. Its ΔR² does not decompose the cross-fitted ΔR² above; the aggregate held-out chart remains the stronger result.</p>
+          </aside>
+        </div>
+
+        ${clusteringPanel}
+
         <div class="subsection-heading reveal"><span>Human-readable examples</span><h3>Stable relationships across topically different scenarios</h3><p>Selected in one geometric view and stable across models. Open a pair to read both scenarios.</p></div>
         <div class="pair-list reveal">${pairCards}</div>
-
-        <details class="secondary-method reveal">
-          <summary><span><small>Secondary diagnostic</small><strong>Why clustering is not the headline</strong></span><span>Open details</span></summary>
-          <div class="secondary-body">
-            ${clusteringDetails}
-          </div>
-        </details>
       </div>
     </section>`;
 }

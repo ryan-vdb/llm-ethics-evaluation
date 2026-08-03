@@ -96,5 +96,5 @@
   "question_similarity_cutoff": 0.24955412720042297,
   "pair_count": 992,
   "interpretation": "The null approximately preserves coarse question-topic block assignment and raw-answer marginals, and retains the shared projection operation, while destroying scenario-level alignment.",
-  "runtime_seconds": 24.66514683305286
+  "runtime_seconds": 23.39542887499556
 }

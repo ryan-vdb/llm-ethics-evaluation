@@ -95,16 +95,19 @@ def _spearman(first: np.ndarray, second: np.ndarray) -> float:
     return float(np.dot(first_rank, second_rank) / denominator)
 
 
-def run_reasoning_topics(
-    dataset: FrameworkDataset,
+def fit_answer_only_nmf(
+    documents: list[dict[str, object]],
     *,
-    components: int = 10,
-    permutations: int = 999,
-    random_state: int = 42,
-) -> dict[str, object]:
-    """Fit answer-only NMF topics and compare them with residual geometry."""
+    components: int,
+    random_state: int,
+) -> tuple[TfidfVectorizer, NMF, np.ndarray, object]:
+    """Fit the canonical answer-only TF-IDF/NMF representation.
 
-    documents = load_answer_only_documents()
+    The helper is shared with the wording-regression method so its descriptive
+    basis uses exactly the same token filtering and factorization settings.
+    Returned document-topic rows are L1-normalized topic mixtures.
+    """
+
     vectorizer = TfidfVectorizer(
         min_df=4,
         max_df=0.90,
@@ -118,7 +121,7 @@ def run_reasoning_topics(
     model = NMF(
         n_components=components,
         init="nndsvda",
-        max_iter=1000,
+        max_iter=2000,
         l1_ratio=0.10,
         random_state=random_state,
     )
@@ -129,6 +132,24 @@ def run_reasoning_topics(
         topic_sums,
         out=np.zeros_like(document_topics),
         where=topic_sums > 0,
+    )
+    return vectorizer, model, document_topics, tfidf
+
+
+def run_reasoning_topics(
+    dataset: FrameworkDataset,
+    *,
+    components: int = 10,
+    permutations: int = 999,
+    random_state: int = 42,
+) -> dict[str, object]:
+    """Fit answer-only NMF topics and compare them with residual geometry."""
+
+    documents = load_answer_only_documents()
+    vectorizer, model, document_topics, tfidf = fit_answer_only_nmf(
+        documents,
+        components=components,
+        random_state=random_state,
     )
 
     by_model = {
@@ -246,6 +267,7 @@ def run_reasoning_topics(
         "vocabulary_size": int(tfidf.shape[1]),
         "components": components,
         "reconstruction_error": float(model.reconstruction_err_),
+        "iterations": int(model.n_iter_),
         "question_similarity_cutoff": cutoff,
         "cross_topic_pair_count": int(np.sum(np.triu(mask, k=1))),
         "topic_vs_residual_partial_rho": observed,

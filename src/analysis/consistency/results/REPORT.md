@@ -1,6 +1,6 @@
 # Shared Ethical Geometry: Results
 
-Generated: 2026-07-31T02:53:44.245458+00:00
+Generated: 2026-08-02T23:42:01.785261+00:00
 
 ## Conclusion
 
@@ -83,6 +83,7 @@ Conflict terms in the table come from researcher-authored scenario annotations; 
 - **Disjoint model-half pair validation:** pairs selected by three models average the **92.7%** similarity percentile in the other three (null **50.0%**).
 - **Shared latent-axis interpretation:** the first 6 axes explain **21.5%** of consensus residual variation. Across the 36 training-defined fold axes, mean held-out score recovery is **0.934** and 36/36 tests are FDR-significant. This is secondary whole-geometry evidence, not topic-controlled.
 - **Answer-only NMF interpretation aid:** ten sparse reasoning-language topics align with the orthogonal residual geometry at partial ρ **0.330** (exploratory permutation p **0.0001**). The basis is jointly fit to all responses, so this is not held-out evidence.
+- **Cross-fitted NMF wording regression:** answer-only wording similarity learned from the other five models has mean standardized β **0.236** and raises mean held-out R² from **0.012** to **0.066** (ΔR² **0.054**).
 
 The named axes below come from the all-model descriptive PCA. Fold-specific PCs can rotate or swap, so the fold-wise recovery tests are summarized across the six-dimensional set rather than attached to individual names.
 
@@ -111,6 +112,48 @@ Tokens copied from each paired question are removed before TF–IDF and NMF. Lab
 | 8 | patient, clinical, maleficence, non maleficence, non, beneficence | 0.695 |
 | 9 | choice, capacity, decision, person, consent, memory | 0.711 |
 | 10 | disclosure, trust, term, integrity, silence, truth | 0.776 |
+
+### Cross-fitted NMF wording regression
+
+For each held-out model, TF–IDF and NMF are refit using only the other five models' question-token-removed answers. Their average scenario profiles form an NMF wording-similarity matrix; the held-out target is the exactly question-orthogonalized answer-similarity matrix.
+
+```text
+z(Y^m_ij) = beta_0 + beta_1 z(Q_ij) + beta_2 z([z(Q_ij)]^2) + beta_W z(W^-m_ij) + error_ij
+```
+
+On **992** different-domain, different-source, bottom-quartile question-similarity pairs, mean standardized wording β is **0.236** (minimum **0.219**).
+Mean R² rises from **0.012** with question controls alone to **0.066** after adding cross-model NMF wording similarity: mean ΔR² **0.054**.
+Holm-significant held-out coefficients: **6/6**. Question-node bootstrap intervals describe conditional uncertainty; two-sided nuisance-residual QAP p-values remain exploratory.
+
+| Held-out model | Wording β | 95% node-bootstrap CI | Controls R² | + wording R² | ΔR² | ΔR² CI | Holm p |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| claude_sonnet | 0.221 | [0.048, 0.371] | 0.008 | 0.055 | 0.047 | [0.002, 0.133] | 0.0123 |
+| claude_opus | 0.260 | [0.102, 0.407] | 0.004 | 0.069 | 0.065 | [0.010, 0.160] | 0.0030 |
+| gemini_flash | 0.219 | [0.073, 0.368] | 0.014 | 0.061 | 0.047 | [0.005, 0.131] | 0.0123 |
+| gpt_55 | 0.235 | [0.061, 0.392] | 0.020 | 0.073 | 0.053 | [0.004, 0.148] | 0.0072 |
+| grok | 0.232 | [0.061, 0.385] | 0.010 | 0.063 | 0.053 | [0.004, 0.143] | 0.0123 |
+| deepseek | 0.251 | [0.062, 0.408] | 0.016 | 0.077 | 0.061 | [0.004, 0.160] | 0.0045 |
+
+Component-count sensitivity (6, 8, 10, 12, 14 topics) keeps mean ΔR² between **0.049** and **0.066**. Leave-one-source-out mean wording β ranges from **0.201** to **0.321**.
+
+#### Descriptive topic-coactivation coefficients
+
+A separate, more flexible model uses a common all-response NMF basis and enters all ten topic co-activations in one equation. This descriptive model adds mean R² **0.107** beyond question controls; its mean design condition number is **2.15**. It does not decompose the primary cross-fitted ΔR², and the coefficients below have no individual inferential p-values.
+
+| Topic | Highest-weight terms | Mean standardized β | Range | Positive models |
+|---:|---|---:|---:|---:|
+| 1 | especially, strongest, central, time, public, matters | 0.043 | 0.016 to 0.092 | 6/6 |
+| 2 | being, well being, well, suffering, human, life | 0.173 | 0.115 to 0.215 | 6/6 |
+| 3 | friend, boundaries, sacrifice, genuine, honesty, mutual | 0.084 | 0.053 to 0.121 | 6/6 |
+| 4 | war, civilian, just, just war, threat, imminent | -0.054 | -0.101 to -0.028 | 0/6 |
+| 5 | candidate, fairness, performance, relevant, candidates, employer | 0.016 | -0.029 to 0.086 | 3/6 |
+| 6 | costs, irreversible, present, intergenerational, generations, climate | 0.130 | 0.072 to 0.165 | 6/6 |
+| 7 | individual, autonomy, ethical, education, social, parental | 0.103 | 0.060 to 0.153 | 6/6 |
+| 8 | patient, clinical, maleficence, non maleficence, non, beneficence | -0.034 | -0.080 to 0.027 | 1/6 |
+| 9 | choice, capacity, decision, person, consent, memory | 0.069 | 0.002 to 0.108 | 6/6 |
+| 10 | disclosure, trust, term, integrity, silence, truth | 0.134 | 0.070 to 0.186 | 6/6 |
+
+The held-out model's response text is excluded from its primary NMF wording predictor, making the aggregate effect cross-model. The scenarios, response corpus, and embedding encoder remain shared, so this is fixed-panel interpretation rather than causal or unseen-scenario validation. The named topic coefficients use one all-response NMF basis in a separate, more flexible descriptive model. Its R-squared does not decompose the primary cross-fitted gain, and its topic coefficients receive no inferential p-values.
 
 ## Most stable cross-topic scenario pairs
 

@@ -169,5 +169,5 @@
     }
   ],
   "interpretation": "CKA measures agreement between whole geometries and is invariant to isotropic scaling and orthogonal rotations. This ratio uses unbiased HSIC terms, but the ratio itself is not unbiased and can be negative under the null.",
-  "runtime_seconds": 5.477300665806979
+  "runtime_seconds": 5.774006250081584
 }

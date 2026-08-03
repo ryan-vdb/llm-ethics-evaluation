@@ -4,6 +4,7 @@
   "vocabulary_size": 4247,
   "components": 10,
   "reconstruction_error": 22.37872095961457,
+  "iterations": 759,
   "question_similarity_cutoff": 0.24955412720042297,
   "cross_topic_pair_count": 992,
   "topic_vs_residual_partial_rho": 0.3298719250430614,
@@ -652,5 +653,5 @@
     }
   ],
   "interpretation_warning": "The TF-IDF vocabulary and NMF basis are jointly fit to all response texts. Topics are sparse post-hoc descriptions of the same texts used for embedding geometry, so their cross-model concordance aids interpretation but is not held-out or independent validation.",
-  "runtime_seconds": 4.043934167129919
+  "runtime_seconds": 3.8663364588283002
 }
