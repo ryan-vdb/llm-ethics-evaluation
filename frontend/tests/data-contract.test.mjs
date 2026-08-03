@@ -13,6 +13,8 @@ test("dashboard data preserves the canonical panel and headline results", async 
   assert.ok(data.panel.integrityQuestions > 0);
   assert.ok(data.panel.embeddingDimensions > 0);
   assert.equal(data.consistency.heldOutModels.length, data.panel.models.length);
+  assert.equal(data.consistency.questionSimilarityHeatmap.questions.length, data.panel.consistencyQuestions);
+  assert.equal(data.consistency.questionSimilarityHeatmap.matrix.length, data.panel.consistencyQuestions);
   assert.equal(data.consistency.mrqap.heldOutModels.length, data.panel.models.length);
   assert.equal(data.consistency.mrqap.rawHeldOutModels.length, data.panel.models.length);
   assert.equal(data.consistency.wordingRegression.heldOutModels.length, data.panel.models.length);
@@ -42,6 +44,27 @@ test("claim-boundary diagnostics remain available to the frontend", async () => 
     data.consistency.heldOutModels.every((row) => row.holm <= 0.05),
   );
   assert.ok(Number.isFinite(data.consistency.topicRemoval.strictResidualRho));
+  const heatmap = data.consistency.questionSimilarityHeatmap;
+  assert.equal(heatmap.modelCount, data.panel.models.length);
+  assert.equal(heatmap.displayOrdering.display_only, true);
+  assert.deepEqual(
+    heatmap.questions.map((row) => row.id).sort((first, second) => first - second),
+    Array.from({ length: data.panel.consistencyQuestions }, (_, index) => index),
+  );
+  const offDiagonal = [];
+  heatmap.matrix.forEach((row, rowIndex) => {
+    assert.equal(row.length, data.panel.consistencyQuestions);
+    assert.ok(Math.abs(row[rowIndex] - 1) < 1e-10);
+    row.forEach((value, columnIndex) => {
+      assert.ok(value >= -1 && value <= 1);
+      assert.ok(Math.abs(value - heatmap.matrix[columnIndex][rowIndex]) < 1e-10);
+      if (columnIndex > rowIndex) offDiagonal.push(value);
+    });
+  });
+  assert.equal(heatmap.summary.uniquePairCount, offDiagonal.length);
+  assert.ok(Math.abs(heatmap.summary.mean - offDiagonal.reduce((total, value) => total + value, 0) / offDiagonal.length) < 1e-10);
+  assert.equal(heatmap.summary.minimum, Math.min(...offDiagonal));
+  assert.equal(heatmap.summary.maximum, Math.max(...offDiagonal));
   assert.ok(data.consistency.mrqap.definition.pairCount > 0);
   assert.ok(data.consistency.mrqap.definition.questionSimilarityQuantile > 0);
   assert.ok(data.consistency.mrqap.definition.questionSimilarityQuantile < 1);

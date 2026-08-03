@@ -1419,5 +1419,5 @@
     ]
   },
   "interpretation_warning": "The held-out model's response text is excluded from its primary NMF wording predictor, making the aggregate effect cross-model. The scenarios, response corpus, and embedding encoder remain shared, so this is fixed-panel interpretation rather than causal or unseen-scenario validation. The named topic coefficients use one all-response NMF basis in a separate, more flexible descriptive model. Its R-squared does not decompose the primary cross-fitted gain, and its topic coefficients receive no inferential p-values.",
-  "runtime_seconds": 25.58685016585514
+  "runtime_seconds": 25.85107354191132
 }

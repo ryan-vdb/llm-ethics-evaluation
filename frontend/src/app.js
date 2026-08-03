@@ -1,6 +1,7 @@
 import {
   bulletPlot,
   divergingBarPlot,
+  embeddingSpaceFigure,
   escapeHtml,
   estimatePlot,
   forestPlot,
@@ -10,7 +11,9 @@ import {
   horizontalBarPlot,
   modelLabel,
   pairedDotPlot,
+  questionSimilarityHeatmapFigure,
   rSquaredComparisonPlot,
+  setupQuestionSimilarityHeatmap,
 } from "./charts.js";
 
 const app = document.querySelector("#app");
@@ -52,7 +55,7 @@ function renderHeader() {
         <span><strong>Ethical Geometry</strong><small>Results atlas</small></span>
       </a>
       <nav class="site-nav" aria-label="Main navigation">
-        <a href="#overview">Overview</a>
+        <a href="#project-overview">Project overview</a>
         <a href="#consistency">Shared geometry</a>
         <a href="#integrity">Feedback response</a>
         <a href="#process">Method</a>
@@ -79,8 +82,15 @@ function renderHero(data) {
         <p class="hero-lede">${data.panel.models.length} models share a strong cross-topic response geometry. Their semantic revision under social feedback is smaller, qualified, and model-dependent.</p>
         <div class="hero-actions">
           <a class="button primary" href="#consistency">Explore the evidence ${icon("arrow")}</a>
-          <a class="button secondary" href="#process">See how it works</a>
+          <a class="button secondary" href="#project-overview">See how the dataset was made</a>
         </div>
+      </div>
+      <div class="embedding-primer reveal">
+        ${embeddingSpaceFigure({
+          dimensions: data.panel.embeddingDimensions,
+          rawQuestionCosine: data.consistency.topicRemoval.rawQuestionCosine,
+          maximumResidualQuestionCosine: data.consistency.topicRemoval.maximumResidualQuestionCosine,
+        })}
       </div>
       <div class="finding-grid reveal">
         <article class="finding-card consistency-card">
@@ -108,8 +118,87 @@ function renderHero(data) {
     </section>`;
 }
 
+function renderProjectOverview(data) {
+  const modelChips = data.panel.models
+    .map((model) => `<span>${escapeHtml(modelLabel(model))}</span>`)
+    .join("");
+  const stages = [
+    [
+      "01",
+      "Load the scenarios",
+      `${data.panel.consistencyQuestions} consistency dilemmas and ${data.panel.integrityQuestions} feedback-study dilemmas are loaded from CSV tables with their domain, ethical conflict, source, and full question text.`,
+    ],
+    [
+      "02",
+      "Ask the model",
+      "The same reasoning prompt asks each model for the most ethically justified course of action and a one-paragraph explanation. Only the question text—not its domain, source, or researcher conflict label—is sent through OpenRouter.",
+    ],
+    [
+      "03",
+      "Branch the feedback turns",
+      "For integrity scenarios, six agreement or opposition prompts each start from the same saved initial answer. No helper response is allowed to influence another branch.",
+    ],
+    [
+      "04",
+      "Store the text",
+      `${data.panel.consistencyResponses.toLocaleString()} consistency answers and ${data.panel.integrityResponses.toLocaleString()} integrity response cells are linked to model and question IDs in DuckDB.`,
+    ],
+    [
+      "05",
+      "Embed questions and answers",
+      `The OpenRouter embedding endpoint calls openai/text-embedding-3-large, turning every question and response into a ${data.panel.embeddingDimensions.toLocaleString()}-coordinate vector.`,
+    ],
+    [
+      "06",
+      "Build the analysis views",
+      "The loaders verify a complete aligned panel, subtract each question's exact projection from its paired answer, L2-normalize the residuals, and pass those vectors to the consistency and integrity methods.",
+    ],
+  ];
+
+  return `
+    <section class="project-overview-section" id="project-overview">
+      <div class="section-shell">
+        ${sectionHeading("Project overview · Before the results", "From ethical dilemmas to an <em>analysis-ready geometric dataset.</em>", "This project asks whether models organize topically unrelated ethical scenarios in recurring ways—and, separately, how much their answers move after social feedback. The dashboard begins after a traceable collection and embedding pipeline.")}
+
+        <div class="project-story-grid reveal">
+          <article class="project-purpose-card">
+            <span class="panel-kicker">The research design</span>
+            <h3>Two questions, one shared data foundation.</h3>
+            <p>Study 01 looks for response geometry that transfers across models after the paired question-embedding direction is removed. Study 02 compares second-turn semantic movement after opposition with movement after an active agreement-and-reconsider control.</p>
+            <div class="project-study-routes">
+              <div><span>Consistency</span><strong>Do unrelated scenarios retain a common organization?</strong><small>${data.panel.consistencyQuestions} scenarios · ${data.panel.models.length} models</small></div>
+              <div><span>Integrity</span><strong>Does pushback produce additional answer movement?</strong><small>${data.panel.integrityQuestions} scenarios · ${data.panel.integrityConditions} response conditions</small></div>
+            </div>
+          </article>
+          <aside class="collection-facts-card">
+            <span class="panel-kicker">Fixed model panel</span>
+            <h3>One collection route across six models</h3>
+            <div class="model-chip-list">${modelChips}</div>
+            <dl>
+              <div><dt>Generation</dt><dd>OpenRouter chat-completions API</dd></div>
+              <div><dt>Vectorization</dt><dd>OpenRouter embeddings API</dd></div>
+              <div><dt>Encoder declared in source</dt><dd>OpenAI text-embedding-3-large</dd></div>
+              <div><dt>Storage</dt><dd>Local DuckDB snapshot</dd></div>
+            </dl>
+            <p>API keys are used only while collecting new text or vectors. The committed database, analyses, and dashboard run without them.</p>
+          </aside>
+        </div>
+
+        <div class="collection-pipeline reveal" aria-label="Data collection and preparation pipeline">
+          ${stages.map(([number, title, description]) => `
+            <article>
+              <span>${number}</span>
+              <div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(description)}</p></div>
+            </article>`).join("")}
+        </div>
+        <p class="collection-provenance-note reveal"><strong>Reproducibility boundary:</strong> the current collection source declares the embedding model, while stored embedding rows contain vectors rather than per-row encoder metadata. Generation requests specify the model and message history; provider sampling defaults therefore form part of the original collection environment.</p>
+      </div>
+    </section>`;
+}
+
 function renderConsistency(data) {
   const c = data.consistency;
+  const questionHeatmap = c.questionSimilarityHeatmap;
   const significantModelCount = c.heldOutModels.filter((row) => row.holm <= 0.05).length;
   const allModelsSignificant = significantModelCount === c.heldOutModels.length;
   const heldOutTitle = allModelsSignificant
@@ -252,6 +341,13 @@ function renderConsistency(data) {
             <div class="mini-stat"><span>Split-half agreement</span><strong>ρ ${formatNumber(c.headline.splitHalfRho)}</strong></div>
           </aside>
         </div>
+
+        <article class="panel question-heatmap-panel reveal">
+          <header><div><span class="panel-kicker">Shared scenario map</span><h3>The complete question-by-question response similarity matrix</h3></div><span class="method-chip">93 × 93 · mean cosine</span></header>
+          <p class="question-heatmap-lede">For every scenario pair, calculate one cosine per model after exact question projection, then average those six cosine values. This displays the shared response geometry directly—one cell per question pair.</p>
+          ${questionSimilarityHeatmapFigure(questionHeatmap)}
+          <footer class="chart-caption"><span>Full descriptive matrix: all ${questionHeatmap.summary.uniquePairCount.toLocaleString()} unique scenario pairs</span><span>Visual ordering comes from this same matrix and is not evidence of discrete frameworks</span></footer>
+        </article>
 
         <div class="content-grid two-up reveal">
           <article class="panel chart-panel">
@@ -469,7 +565,7 @@ function renderIntegrity(data) {
           </article>
         </div>
 
-        <article class="panel chart-panel reveal">
+        <article class="panel chart-panel geometry-sensitivity-panel reveal">
           <header><div><span class="panel-kicker">Geometry sensitivity</span><h3>The average direction survives preprocessing choices</h3></div><span class="method-chip">1−cosine only</span></header>
           ${horizontalBarPlot(cosineRobustness, { min: 0, max: 0.055, left: 295, digits: 2 })}
           <p class="panel-note">Angular distance agrees directionally at ${formatSigned(i.robustness.find((row) => row.scale === "degrees").opposition_minus_agreement_effect, 2)}°. These scales are intentionally not plotted on the same axis.</p>
@@ -581,7 +677,7 @@ function renderFooter() {
   return `<footer class="site-footer"><div><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><p><strong>Ethical Geometry Atlas</strong><br/>A transparent interface for exploratory LLM ethics research.</p></div><a href="#overview">Back to top ↑</a></footer>`;
 }
 
-function setupInteractions() {
+function setupInteractions(data) {
   const root = document.documentElement;
   root.classList.add("motion-ready");
   const toggle = document.querySelector(".theme-toggle");
@@ -603,6 +699,7 @@ function setupInteractions() {
     }
   };
   setTheme(stored || preferred);
+  setupQuestionSimilarityHeatmap(data.consistency.questionSimilarityHeatmap);
   toggle?.addEventListener("click", () => setTheme(root.dataset.theme === "dark" ? "light" : "dark"));
 
   document.querySelectorAll("[data-copy]").forEach((button) => {
@@ -677,8 +774,8 @@ async function load() {
     if (!response.ok) throw new Error(`Data request failed (${response.status})`);
     const data = await response.json();
     if (data.schemaVersion !== 1) throw new Error("Unsupported dashboard data schema");
-    app.innerHTML = `${renderHeader()}<main id="main-content">${renderHero(data)}${renderConsistency(data)}${renderIntegrity(data)}${renderProcess(data)}${renderReproduce(data)}</main>${renderFooter()}`;
-    setupInteractions();
+    app.innerHTML = `${renderHeader()}<main id="main-content">${renderHero(data)}${renderProjectOverview(data)}${renderConsistency(data)}${renderIntegrity(data)}${renderProcess(data)}${renderReproduce(data)}</main>${renderFooter()}`;
+    setupInteractions(data);
   } catch (error) {
     app.innerHTML = `<main class="error-shell" role="alert"><span>Dashboard unavailable</span><h1>The analysis snapshot could not be loaded.</h1><p>${escapeHtml(error.message)}</p><code>Run: npm run data</code></main>`;
     console.error(error);

@@ -945,5 +945,5 @@
     "interpretation": "Each fold tests its own training-defined PCA axes. Because PCA components can swap or rotate across folds, these tests are summarized across the six-dimensional set and are not attached to the post-hoc labels from the all-model descriptive fit."
   },
   "interpretation_warning": "This is a secondary whole-geometry analysis, not topic-controlled. Axes are learned without ethical labels. Descriptive names are assigned afterward from extreme-question annotations and are not independent validation or mapped to fold-specific component numbers.",
-  "runtime_seconds": 20.00134670897387
+  "runtime_seconds": 19.835465624928474
 }

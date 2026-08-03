@@ -20,6 +20,8 @@ from __future__ import annotations
 from itertools import combinations
 
 import numpy as np
+from scipy.cluster.hierarchy import leaves_list, linkage
+from scipy.spatial.distance import squareform
 
 from ..tools.data import MODELS, FrameworkDataset
 from ..tools.geometry import (
@@ -211,6 +213,99 @@ def pairwise_rsa(
             }
         )
     return rows
+
+
+def consensus_residual_heatmap(
+    dataset: FrameworkDataset,
+    matrices: dict[str, np.ndarray],
+) -> dict[str, object]:
+    """Build a descriptive question-by-question consensus heatmap payload.
+
+    Each cell is the arithmetic mean of the six model-specific residual-cosine
+    cells.  Averaging similarity matrices (rather than response vectors) keeps
+    this display aligned with the RSA estimand and prevents cancellation across
+    model-specific embedding directions.
+
+    Average-linkage clustering is used only to place visually similar rows next
+    to one another.  It does not select clusters and is not used by any test.
+    """
+
+    question_count = len(dataset.question_ids)
+    model_matrices = [np.asarray(matrices[model]) for model in MODELS]
+    expected_shape = (question_count, question_count)
+    if any(matrix.shape != expected_shape for matrix in model_matrices):
+        raise ValueError(
+            "Residual similarity matrices do not match the question panel"
+        )
+
+    consensus = np.mean(np.stack(model_matrices), axis=0)
+    # Remove harmless floating-point asymmetry before converting to a condensed
+    # distance vector.  Every source cosine matrix has a unit diagonal.
+    consensus = (consensus + consensus.T) / 2.0
+    np.fill_diagonal(consensus, 1.0)
+
+    distance = np.clip(1.0 - consensus, 0.0, 2.0)
+    np.fill_diagonal(distance, 0.0)
+    condensed_distance = squareform(distance, checks=True)
+    hierarchy = linkage(
+        condensed_distance,
+        method="average",
+        optimal_ordering=True,
+    )
+    display_order = leaves_list(hierarchy).astype(int)
+    ordered_consensus = consensus[np.ix_(display_order, display_order)]
+
+    triangle = np.triu_indices(question_count, k=1)
+    off_diagonal = consensus[triangle]
+    ordered_questions = []
+    for display_index, original_index in enumerate(display_order):
+        ordered_questions.append(
+            {
+                "display_index": display_index,
+                "question_id": int(dataset.question_ids[original_index]),
+                "domain": dataset.domains[original_index],
+                "source": dataset.sources[original_index],
+                "conflict": dataset.conflicts[original_index],
+                "question": dataset.question_texts[original_index],
+            }
+        )
+
+    return {
+        "value_definition": (
+            "Cellwise arithmetic mean across the six models of cosine "
+            "similarity between exactly paired-question-orthogonalized, "
+            "L2-normalized answer embeddings. Response vectors are not "
+            "averaged before cosine calculation."
+        ),
+        "model_order": list(MODELS),
+        "model_count": len(MODELS),
+        "matrix_shape": [question_count, question_count],
+        "display_ordering": {
+            "method": "average-linkage hierarchical ordering",
+            "distance": "1 - consensus residual cosine",
+            "optimal_leaf_ordering": True,
+            "display_only": True,
+            "warning": (
+                "The hierarchy only reorders rows and columns for display. "
+                "It does not define clusters and is not inferential evidence "
+                "for discrete ethical types."
+            ),
+        },
+        "ordered_questions": ordered_questions,
+        "ordered_similarity_matrix": ordered_consensus.tolist(),
+        "off_diagonal_summary": {
+            "unique_pair_count": int(len(off_diagonal)),
+            "mean": float(np.mean(off_diagonal)),
+            "standard_deviation": float(np.std(off_diagonal)),
+            "minimum": float(np.min(off_diagonal)),
+            "quantile_05": float(np.quantile(off_diagonal, 0.05)),
+            "quantile_25": float(np.quantile(off_diagonal, 0.25)),
+            "median": float(np.median(off_diagonal)),
+            "quantile_75": float(np.quantile(off_diagonal, 0.75)),
+            "quantile_95": float(np.quantile(off_diagonal, 0.95)),
+            "maximum": float(np.max(off_diagonal)),
+        },
+    }
 
 
 def split_half_reliability(
@@ -489,6 +584,10 @@ def run_rsa_analysis(
             residual_matrices,
             question_similarity,
             primary_mask,
+        ),
+        "consensus_residual_similarity_heatmap": consensus_residual_heatmap(
+            dataset,
+            residual_matrices,
         ),
         "split_half_reliability": split_half_reliability(
             residual_matrices,

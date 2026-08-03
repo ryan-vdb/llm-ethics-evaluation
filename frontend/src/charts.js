@@ -91,6 +91,266 @@ function chartFrame({ body, width, height, label, className = "", headers = [], 
     ${accessibleTable(label, headers, rows)}`;
 }
 
+export function embeddingSpaceFigure({
+  dimensions,
+  rawQuestionCosine,
+  maximumResidualQuestionCosine,
+}) {
+  const dimensionLabel = Number(dimensions).toLocaleString();
+  const residualLabel = Number.isFinite(maximumResidualQuestionCosine)
+    ? maximumResidualQuestionCosine.toExponential(1).replace("e-", "e−")
+    : "—";
+  return `
+    <figure class="embedding-primer-figure" aria-labelledby="embedding-primer-title" aria-describedby="embedding-primer-caption">
+      <header class="embedding-primer-heading">
+        <span>60-second primer · schematic</span>
+        <h2 id="embedding-primer-title">A response becomes a point in a very large space.</h2>
+        <p>The embedder translates meaning into coordinates. Directional similarity between those coordinates lets us compare responses mathematically.</p>
+      </header>
+      <div class="embedding-flow">
+        <section class="embedding-step embedding-text-step">
+          <span>01 · Response text</span>
+          <div class="response-snippet"><b>A</b><q>Respect informed choice and consent.</q></div>
+          <div class="response-snippet"><b>B</b><q>Autonomy should guide the decision.</q></div>
+          <div class="response-snippet distant"><b>C</b><q>Prevent irreversible harm to future generations.</q></div>
+        </section>
+        <section class="embedding-step embedding-vector-step">
+          <span>02 · Encode meaning</span>
+          <div class="vector-row"><b>A</b><code>[a₁, a₂, …, a<sub>${dimensionLabel}</sub>]</code></div>
+          <div class="vector-row"><b>B</b><code>[b₁, b₂, …, b<sub>${dimensionLabel}</sub>]</code></div>
+          <div class="vector-row distant"><b>C</b><code>[c₁, c₂, …, c<sub>${dimensionLabel}</sub>]</code></div>
+          <p>${dimensionLabel} learned coordinates per response—not human-assigned categories.</p>
+        </section>
+        <section class="embedding-step embedding-projection-step">
+          <span>03 · Remove the question direction</span>
+          <svg viewBox="0 0 230 128" aria-hidden="true">
+            <defs><marker id="primer-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z"/></marker></defs>
+            <line class="primer-axis" x1="22" y1="106" x2="214" y2="106"/>
+            <line class="primer-question-vector" x1="28" y1="106" x2="187" y2="48" marker-end="url(#primer-arrow)"/>
+            <line class="primer-response-vector" x1="28" y1="106" x2="165" y2="18" marker-end="url(#primer-arrow)"/>
+            <line class="primer-projection-line" x1="165" y1="18" x2="185" y2="49"/>
+            <line class="primer-residual-vector" x1="185" y1="49" x2="165" y2="18" marker-end="url(#primer-arrow)"/>
+            <text x="188" y="43">question q</text><text x="151" y="14">answer r</text><text x="121" y="39">residual r⊥</text>
+          </svg>
+          <code>r⊥ = r − proj<sub>q</sub>(r)</code>
+          <p>The exact paired-question component is subtracted before comparison.</p>
+        </section>
+        <section class="embedding-step embedding-geometry-step">
+          <span>04 · Compare directions</span>
+          <svg viewBox="0 0 230 128" aria-hidden="true">
+            <line class="primer-axis" x1="28" y1="106" x2="214" y2="106"/><line class="primer-axis" x1="28" y1="106" x2="28" y2="12"/>
+            <line class="primer-point-ray close" x1="28" y1="106" x2="166" y2="33"/><line class="primer-point-ray close" x1="28" y1="106" x2="179" y2="48"/><line class="primer-point-ray distant" x1="28" y1="106" x2="76" y2="22"/>
+            <circle class="primer-point close" cx="166" cy="33" r="7"/><circle class="primer-point close" cx="179" cy="48" r="7"/><circle class="primer-point distant" cx="76" cy="22" r="7"/>
+            <text x="153" y="25">A</text><text x="183" y="48">B</text><text x="62" y="18">C</text>
+            <path class="primer-angle" d="M64 87 A42 42 0 0 1 68 82"/>
+          </svg>
+          <p>A and B point in similar directions, so their cosine is higher. C points elsewhere.</p>
+        </section>
+      </div>
+      <div class="embedding-primer-facts" aria-label="Observed preprocessing facts">
+        <span><b>${dimensionLabel}</b><small>dimensions used in the actual analysis</small></span>
+        <span><b>${formatNumber(rawQuestionCosine)}</b><small>mean raw answer–question cosine</small></span>
+        <span><b>${escapeHtml(residualLabel)}</b><small>maximum absolute cosine after projection</small></span>
+      </div>
+      <figcaption id="embedding-primer-caption">The point diagram is a two-dimensional teaching sketch, not an observed scatterplot. The calculations use every coordinate in the ${dimensionLabel}-dimensional vectors; the two projection audit values are measured from this dataset.</figcaption>
+    </figure>`;
+}
+
+export function questionSimilarityHeatmapFigure(heatmap) {
+  const questionOptions = heatmap.questions
+    .map((question, index) => ({ question, index }))
+    .sort((first, second) => first.question.id - second.question.id)
+    .map(({ question, index }) => `<option value="${index}">Q${question.id} · ${escapeHtml(question.conflict)}</option>`)
+    .join("");
+  const firstQuestion = heatmap.questions[0];
+  const secondQuestion = heatmap.questions[1];
+  const initialValue = heatmap.matrix[0][1];
+  const questionCard = (question, name) => `
+    <article class="question-pair-card" data-heatmap-question-card="${name}">
+      <span>Q${question.id} · ${escapeHtml(question.domain)}</span>
+      <strong>${escapeHtml(question.conflict)}</strong>
+      <p>${escapeHtml(question.question)}</p>
+    </article>`;
+  return `
+    <div class="question-heatmap-layout">
+      <div class="question-heatmap-visual">
+        <div class="question-heatmap-scroll" tabindex="0" aria-label="Scrollable 93 by 93 question-similarity heatmap">
+          <canvas id="question-similarity-canvas" class="question-similarity-canvas" width="760" height="760" tabindex="0" role="img" aria-describedby="question-heatmap-description">
+            A 93 by 93 matrix of average question-orthogonalized response cosine similarities. Use the pair inspector for exact values.
+          </canvas>
+        </div>
+        <p class="heatmap-scroll-hint">Swipe horizontally to inspect the complete matrix <span aria-hidden="true">→</span></p>
+        <div class="question-heatmap-scale" aria-label="Linear cosine color scale from 0.20 to 0.65"><span>0.20 lower</span><span>0.425</span><span>0.65 higher</span></div>
+        <div class="question-heatmap-stats">
+          <span><b>${formatNumber(heatmap.summary.minimum)}</b><small>minimum pair</small></span>
+          <span><b>${formatNumber(heatmap.summary.mean)}</b><small>mean pair</small></span>
+          <span><b>${formatNumber(heatmap.summary.maximum)}</b><small>maximum pair</small></span>
+          <span><b>${heatmap.summary.uniquePairCount.toLocaleString()}</b><small>unique pairs</small></span>
+        </div>
+      </div>
+      <aside class="question-heatmap-guide">
+        <span class="panel-kicker">Inspect any cell</span>
+        <h4>Which two scenarios receive similarly directed responses?</h4>
+        <p id="question-heatmap-description">Each cell averages six separately calculated residual cosines—one per model. The response vectors themselves are never averaged.</p>
+        <div class="question-heatmap-order-controls" role="group" aria-label="Question matrix display order">
+          <button type="button" data-heatmap-order="similarity" aria-pressed="true">Similarity order</button>
+          <button type="button" data-heatmap-order="question-id" aria-pressed="false">Question ID order</button>
+        </div>
+        <div class="question-pair-selectors">
+          <label><span>First scenario</span><select data-heatmap-select="first">${questionOptions}</select></label>
+          <label><span>Second scenario</span><select data-heatmap-select="second">${questionOptions}</select></label>
+        </div>
+        <output class="question-pair-value"><strong data-heatmap-value>${formatNumber(initialValue)}</strong><span>mean model-wise residual cosine</span></output>
+        <div class="sr-only" data-heatmap-status aria-live="polite"></div>
+        <div class="question-pair-details">
+          ${questionCard(firstQuestion, "first")}
+          ${questionCard(secondQuestion, "second")}
+        </div>
+        <p class="question-heatmap-ordering">Rows and columns use the same average-linkage ordering to place similar patterns together. This changes only display order; it does not define or test clusters.</p>
+      </aside>
+    </div>`;
+}
+
+function interpolateColor(start, end, amount) {
+  const values = start.map((value, index) => Math.round(value + (end[index] - value) * amount));
+  return `rgb(${values.join(", ")})`;
+}
+
+export function setupQuestionSimilarityHeatmap(heatmap) {
+  const canvas = document.querySelector("#question-similarity-canvas");
+  if (!canvas) return;
+  const context = canvas.getContext("2d");
+  const root = document.documentElement;
+  const matrixLeft = 82;
+  const matrixTop = 62;
+  const cellSize = 7;
+  const tickIndices = [0, 15, 30, 45, 60, 75, heatmap.questions.length - 1];
+  const firstSelect = document.querySelector('[data-heatmap-select="first"]');
+  const secondSelect = document.querySelector('[data-heatmap-select="second"]');
+  const orderButtons = [...document.querySelectorAll("[data-heatmap-order]")];
+  const clusteredOrder = heatmap.questions.map((_, index) => index);
+  const questionIdOrder = [...clusteredOrder].sort((first, second) => heatmap.questions[first].id - heatmap.questions[second].id);
+  let displayOrder = clusteredOrder;
+  let selectedRow = 0;
+  let selectedColumn = 1;
+
+  firstSelect.value = String(selectedRow);
+  secondSelect.value = String(selectedColumn);
+
+  const draw = () => {
+    const dark = root.dataset.theme === "dark";
+    const neutral = dark ? [16, 40, 45] : [244, 241, 233];
+    const positive = dark ? [102, 202, 187] : [13, 109, 101];
+    const diagonal = dark ? [43, 56, 57] : [222, 217, 206];
+    const labelColor = dark ? "rgba(236, 243, 238, .68)" : "rgba(16, 41, 45, .7)";
+    const outline = dark ? "#fffdf8" : "#10292d";
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.imageSmoothingEnabled = false;
+    displayOrder.forEach((matrixRowIndex, rowIndex) => {
+      displayOrder.forEach((matrixColumnIndex, columnIndex) => {
+        const value = heatmap.matrix[matrixRowIndex][matrixColumnIndex];
+        const colorAmount = Math.max(0, Math.min(1, (value - 0.20) / 0.45));
+        context.fillStyle = matrixRowIndex === matrixColumnIndex
+          ? `rgb(${diagonal.join(", ")})`
+          : interpolateColor(neutral, positive, colorAmount);
+        context.fillRect(
+          matrixLeft + columnIndex * cellSize,
+          matrixTop + rowIndex * cellSize,
+          cellSize + 0.25,
+          cellSize + 0.25,
+        );
+      });
+    });
+    context.strokeStyle = outline;
+    context.lineWidth = 2;
+    const selectedDisplayRow = displayOrder.indexOf(selectedRow);
+    const selectedDisplayColumn = displayOrder.indexOf(selectedColumn);
+    for (const [rowIndex, columnIndex] of [[selectedDisplayRow, selectedDisplayColumn], [selectedDisplayColumn, selectedDisplayRow]]) {
+      context.strokeRect(
+        matrixLeft + columnIndex * cellSize + 0.5,
+        matrixTop + rowIndex * cellSize + 0.5,
+        cellSize - 1,
+        cellSize - 1,
+      );
+    }
+    context.fillStyle = labelColor;
+    context.font = "10px Avenir Next, Segoe UI, sans-serif";
+    tickIndices.forEach((index) => {
+      const question = heatmap.questions[displayOrder[index]];
+      const position = index * cellSize + cellSize / 2;
+      context.textAlign = "right";
+      context.textBaseline = "middle";
+      context.fillText(`Q${question.id}`, matrixLeft - 8, matrixTop + position);
+      context.save();
+      context.translate(matrixLeft + position, matrixTop - 8);
+      context.rotate(-Math.PI / 3);
+      context.textAlign = "left";
+      context.fillText(`Q${question.id}`, 0, 0);
+      context.restore();
+    });
+  };
+
+  const updateQuestionCard = (name, question) => {
+    const card = document.querySelector(`[data-heatmap-question-card="${name}"]`);
+    card.querySelector("span").textContent = `Q${question.id} · ${question.domain}`;
+    card.querySelector("strong").textContent = question.conflict;
+    card.querySelector("p").textContent = question.question;
+  };
+
+  const updateSelection = (rowIndex, columnIndex, announce = false) => {
+    selectedRow = rowIndex;
+    selectedColumn = columnIndex;
+    firstSelect.value = String(rowIndex);
+    secondSelect.value = String(columnIndex);
+    document.querySelector("[data-heatmap-value]").textContent = formatNumber(heatmap.matrix[rowIndex][columnIndex]);
+    updateQuestionCard("first", heatmap.questions[rowIndex]);
+    updateQuestionCard("second", heatmap.questions[columnIndex]);
+    if (announce) {
+      document.querySelector("[data-heatmap-status]").textContent = `Q${heatmap.questions[rowIndex].id} and Q${heatmap.questions[columnIndex].id}: mean residual cosine ${formatNumber(heatmap.matrix[rowIndex][columnIndex])}`;
+    }
+    draw();
+  };
+
+  const inspectPointer = (event) => {
+    const bounds = canvas.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) * (canvas.width / bounds.width);
+    const y = (event.clientY - bounds.top) * (canvas.height / bounds.height);
+    const displayColumnIndex = Math.floor((x - matrixLeft) / cellSize);
+    const displayRowIndex = Math.floor((y - matrixTop) / cellSize);
+    if (displayRowIndex < 0 || displayColumnIndex < 0 || displayRowIndex >= heatmap.questions.length || displayColumnIndex >= heatmap.questions.length) return;
+    const rowIndex = displayOrder[displayRowIndex];
+    const columnIndex = displayOrder[displayColumnIndex];
+    if (rowIndex !== selectedRow || columnIndex !== selectedColumn) updateSelection(rowIndex, columnIndex, event.type === "pointerdown");
+  };
+
+  firstSelect.addEventListener("change", () => updateSelection(Number(firstSelect.value), selectedColumn, true));
+  secondSelect.addEventListener("change", () => updateSelection(selectedRow, Number(secondSelect.value), true));
+  orderButtons.forEach((button) => button.addEventListener("click", () => {
+    displayOrder = button.dataset.heatmapOrder === "question-id" ? questionIdOrder : clusteredOrder;
+    orderButtons.forEach((candidate) => candidate.setAttribute("aria-pressed", String(candidate === button)));
+    draw();
+  }));
+  canvas.addEventListener("pointermove", inspectPointer);
+  canvas.addEventListener("pointerdown", inspectPointer);
+  canvas.addEventListener("keydown", (event) => {
+    const rowPosition = displayOrder.indexOf(selectedRow);
+    const columnPosition = displayOrder.indexOf(selectedColumn);
+    const movement = {
+      ArrowUp: [-1, 0],
+      ArrowDown: [1, 0],
+      ArrowLeft: [0, -1],
+      ArrowRight: [0, 1],
+    }[event.key];
+    if (!movement) return;
+    event.preventDefault();
+    const nextRow = Math.max(0, Math.min(heatmap.questions.length - 1, rowPosition + movement[0]));
+    const nextColumn = Math.max(0, Math.min(heatmap.questions.length - 1, columnPosition + movement[1]));
+    updateSelection(displayOrder[nextRow], displayOrder[nextColumn], true);
+  });
+  new MutationObserver(draw).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  updateSelection(selectedRow, selectedColumn);
+}
+
 function axisMarkup({ min, max, left, right, top, bottom, width, height, digits = 1, zero = false }) {
   const tickValues = ticks(min, max, 5);
   let output = "";

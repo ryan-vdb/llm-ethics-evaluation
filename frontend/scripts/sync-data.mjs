@@ -154,6 +154,47 @@ export async function buildDashboardData() {
     "integrity condition panels",
   );
   assertUnique(rsa.held_out_models.map((row) => row.model), "held-out models");
+  const questionHeatmap = rsa.consensus_residual_similarity_heatmap;
+  const heatmapQuestionCount = consistency.meta.questions;
+  if (!questionHeatmap || questionHeatmap.matrix_shape[0] !== heatmapQuestionCount || questionHeatmap.matrix_shape[1] !== heatmapQuestionCount) {
+    throw new Error("Consensus question-similarity heatmap shape does not match the question panel");
+  }
+  if (questionHeatmap.model_count !== consistency.meta.models.length || questionHeatmap.display_ordering.display_only !== true) {
+    throw new Error("Consensus question-similarity heatmap metadata is invalid");
+  }
+  assertSameSet(consistency.meta.models, questionHeatmap.model_order, "heatmap model panel");
+  assertUnique(questionHeatmap.ordered_questions.map((row) => row.question_id), "heatmap question order");
+  assertSameSet(
+    Array.from({ length: heatmapQuestionCount }, (_, index) => index),
+    questionHeatmap.ordered_questions.map((row) => row.question_id),
+    "heatmap question panel",
+  );
+  if (questionHeatmap.ordered_similarity_matrix.length !== heatmapQuestionCount) {
+    throw new Error("Consensus question-similarity heatmap row count is invalid");
+  }
+  const heatmapOffDiagonal = [];
+  for (let rowIndex = 0; rowIndex < heatmapQuestionCount; rowIndex += 1) {
+    const row = questionHeatmap.ordered_similarity_matrix[rowIndex];
+    if (!Array.isArray(row) || row.length !== heatmapQuestionCount) {
+      throw new Error(`Consensus question-similarity heatmap column count is invalid at row ${rowIndex}`);
+    }
+    assertClose(row[rowIndex], 1, `heatmap diagonal ${rowIndex}`);
+    for (let columnIndex = 0; columnIndex < heatmapQuestionCount; columnIndex += 1) {
+      const value = row[columnIndex];
+      if (!Number.isFinite(value) || value < -1 || value > 1) {
+        throw new Error(`Invalid heatmap cosine at ${rowIndex}, ${columnIndex}`);
+      }
+      assertClose(value, questionHeatmap.ordered_similarity_matrix[columnIndex][rowIndex], `heatmap symmetry ${rowIndex}, ${columnIndex}`);
+      if (columnIndex > rowIndex) heatmapOffDiagonal.push(value);
+    }
+  }
+  const heatmapSummary = questionHeatmap.off_diagonal_summary;
+  if (heatmapSummary.unique_pair_count !== (heatmapQuestionCount * (heatmapQuestionCount - 1)) / 2) {
+    throw new Error("Consensus question-similarity heatmap unique-pair count is invalid");
+  }
+  assertClose(mean(heatmapOffDiagonal), heatmapSummary.mean, "heatmap off-diagonal mean");
+  assertClose(Math.min(...heatmapOffDiagonal), heatmapSummary.minimum, "heatmap off-diagonal minimum");
+  assertClose(Math.max(...heatmapOffDiagonal), heatmapSummary.maximum, "heatmap off-diagonal maximum");
   assertUnique(revision.heterogeneity.by_model.map((row) => row.model), "model heterogeneity rows");
   assertUnique(revision.heterogeneity.by_question.map((row) => row.question_id), "scenario heterogeneity rows");
   assertSameSet(consistency.meta.models, rsa.held_out_models.map((row) => row.model), "held-out model panels");
@@ -306,6 +347,32 @@ export async function buildDashboardData() {
         p: row.p_value,
         holm: row.p_value_holm,
       })),
+      questionSimilarityHeatmap: {
+        valueDefinition: questionHeatmap.value_definition,
+        modelCount: questionHeatmap.model_count,
+        displayOrdering: questionHeatmap.display_ordering,
+        questions: questionHeatmap.ordered_questions.map((row) => ({
+          displayIndex: row.display_index,
+          id: row.question_id,
+          domain: row.domain,
+          source: row.source,
+          conflict: row.conflict,
+          question: row.question,
+        })),
+        matrix: questionHeatmap.ordered_similarity_matrix,
+        summary: {
+          uniquePairCount: questionHeatmap.off_diagonal_summary.unique_pair_count,
+          mean: questionHeatmap.off_diagonal_summary.mean,
+          standardDeviation: questionHeatmap.off_diagonal_summary.standard_deviation,
+          minimum: questionHeatmap.off_diagonal_summary.minimum,
+          quantile05: questionHeatmap.off_diagonal_summary.quantile_05,
+          quantile25: questionHeatmap.off_diagonal_summary.quantile_25,
+          median: questionHeatmap.off_diagonal_summary.median,
+          quantile75: questionHeatmap.off_diagonal_summary.quantile_75,
+          quantile95: questionHeatmap.off_diagonal_summary.quantile_95,
+          maximum: questionHeatmap.off_diagonal_summary.maximum,
+        },
+      },
       mrqap: {
         method: mrqap.method,
         definition: {

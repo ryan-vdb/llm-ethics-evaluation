@@ -653,5 +653,5 @@
     }
   ],
   "interpretation_warning": "The TF-IDF vocabulary and NMF basis are jointly fit to all response texts. Topics are sparse post-hoc descriptions of the same texts used for embedding geometry, so their cross-model concordance aids interpretation but is not held-out or independent validation.",
-  "runtime_seconds": 3.8663364588283002
+  "runtime_seconds": 3.809582957997918
 }
